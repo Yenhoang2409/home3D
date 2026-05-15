@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3D_House_OpenGL.cpp">
+    <ClCompile Include="..\..\..\Downloads\DoAn_DoHoa_Fixed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

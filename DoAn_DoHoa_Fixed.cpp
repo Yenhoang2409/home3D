@@ -864,54 +864,96 @@ void drawUpperHallAndDoors() {
     drawDoorFrame(-0.35f, 5.5f, 0.68f, 1.45f, 2.25f);
     drawDoorLeaf(-1.08f, 5.5f, 0.78f, 1.38f, 2.18f, bedroomDoorAngle, false, 0.58f, 0.36f, 0.22f);
 
-    drawDoorFrame(3.2f, 5.5f, -1.62f, 1.25f, 2.1f);
-    drawDoorLeaf(2.58f, 5.5f, -1.50f, 1.18f, 2.02f, bathroomDoorAngle, false, 0.70f, 0.62f, 0.50f);
-
-    drawDoorFrame(5.2f, 5.5f, 2.58f, 1.10f, 2.0f);
-    drawDoorLeaf(4.65f, 5.5f, 2.70f, 1.04f, 1.92f, toiletDoorAngle, false, 0.68f, 0.60f, 0.50f);
+    drawCube(3.2f, 7.65f, -1.62f, 1.45f, 0.12f, 0.16f, 0.36f, 0.22f, 0.13f);
+    drawCube(5.2f, 7.50f, 2.58f, 1.30f, 0.12f, 0.16f, 0.36f, 0.22f, 0.13f);
 }
 
 void drawBedroom() {
-    drawCube(-3.8f, 5.75f, 2.0f, 4.3f, 0.45f, 3.0f, 0.42f, 0.28f, 0.18f);
-    drawCube(-3.8f, 6.05f, 2.0f, 4.0f, 0.35f, 2.75f, 0.92f, 0.88f, 0.78f);
-    drawCube(-3.8f, 6.35f, 2.0f, 4.1f, 0.20f, 2.85f, 0.36f, 0.52f, 0.70f);
-    drawCube(-5.4f, 6.65f, 0.75f, 0.75f, 0.22f, 0.48f, 0.96f, 0.94f, 0.86f);
-    drawCube(-4.25f, 6.65f, 0.75f, 0.75f, 0.22f, 0.48f, 0.96f, 0.94f, 0.86f);
-    drawCube(-3.8f, 6.85f, 3.45f, 4.4f, 1.45f, 0.35f, 0.50f, 0.32f, 0.20f);
+    drawCube(-3.9f, 5.53f, 2.35f, 5.2f, 0.04f, 3.7f, 0.88f, 0.78f, 0.58f);
+    drawCube(-3.9f, 5.56f, 2.35f, 4.4f, 0.03f, 2.7f, 0.78f, 0.36f, 0.32f);
 
-    drawCube(-6.45f, 6.0f, 1.0f, 0.9f, 0.6f, 0.8f, 0.46f, 0.30f, 0.20f);
-    drawCube(-6.45f, 6.45f, 1.0f, 0.55f, 0.65f, 0.55f, 0.92f, 0.80f, 0.52f);
-    drawCylinder(-6.45f, 6.2f, 1.0f, 0.05f, 0.45f, 0.72f, 0.62f, 0.42f);
-    drawCube(-1.15f, 6.0f, 1.0f, 0.9f, 0.6f, 0.8f, 0.46f, 0.30f, 0.20f);
-    drawCube(-1.15f, 6.45f, 1.0f, 0.55f, 0.65f, 0.55f, 0.92f, 0.80f, 0.52f);
-    drawCylinder(-1.15f, 6.2f, 1.0f, 0.05f, 0.45f, 0.72f, 0.62f, 0.42f);
+    // Giuong doi: khung go, nem sang mau, chan ga goi ro rang
+    drawCube(-4.1f, 5.82f, 2.35f, 4.25f, 0.45f, 3.05f, 0.55f, 0.34f, 0.20f);
+    drawCylinder(-6.05f, 5.85f, 0.95f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
+    drawCylinder(-2.15f, 5.85f, 0.95f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
+    drawCylinder(-6.05f, 5.85f, 3.75f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
+    drawCylinder(-2.15f, 5.85f, 3.75f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
+    drawCube(-4.1f, 6.12f, 2.35f, 3.95f, 0.34f, 2.72f, 0.96f, 0.93f, 0.84f);
+    drawCube(-4.1f, 6.34f, 2.82f, 4.05f, 0.18f, 1.75f, 0.74f, 0.86f, 0.96f);
+    drawCube(-4.1f, 6.45f, 1.35f, 4.0f, 0.16f, 0.82f, 0.98f, 0.98f, 0.92f);
+    drawCube(-5.15f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
+    drawCube(-4.05f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
+    drawCube(-3.0f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
+    drawCube(-4.1f, 6.9f, 3.88f, 4.45f, 1.25f, 0.30f, 0.48f, 0.29f, 0.18f);
 
-    drawCube(-6.25f, 7.45f, -4.8f, 1.6f, 3.5f, 0.65f, 0.42f, 0.27f, 0.17f);
-    drawCube(-4.55f, 7.45f, -4.8f, 1.6f, 3.5f, 0.65f, 0.46f, 0.30f, 0.19f);
-    drawCube(-5.4f, 7.45f, -4.42f, 0.05f, 3.25f, 0.05f, 0.22f, 0.15f, 0.10f);
-    drawCube(-6.0f, 7.55f, -4.38f, 0.06f, 0.42f, 0.05f, 0.90f, 0.78f, 0.42f);
-    drawCube(-4.8f, 7.55f, -4.38f, 0.06f, 0.42f, 0.05f, 0.90f, 0.78f, 0.42f);
+    // Tu dau giuong va den ngu
+    for (int side = -1; side <= 1; side += 2) {
+        float x = side < 0 ? -6.7f : -1.5f;
+        drawCube(x, 5.9f, 1.15f, 0.9f, 0.58f, 0.78f, 0.50f, 0.32f, 0.20f);
+        drawCube(x, 6.22f, 1.15f, 0.72f, 0.05f, 0.58f, 0.78f, 0.68f, 0.46f);
+        drawCube(x, 6.45f, 1.15f, 0.42f, 0.34f, 0.42f, 0.96f, 0.82f, 0.52f);
+        drawCylinder(x, 6.22f, 1.15f, 0.04f, 0.35f, 0.72f, 0.62f, 0.42f);
+    }
 
-    drawCube(-0.35f, 6.0f, -5.3f, 2.1f, 0.18f, 0.9f, 0.52f, 0.34f, 0.22f);
-    drawCube(-1.2f, 5.75f, -5.6f, 0.12f, 0.7f, 0.12f, 0.34f, 0.24f, 0.18f);
-    drawCube(0.5f, 5.75f, -5.6f, 0.12f, 0.7f, 0.12f, 0.34f, 0.24f, 0.18f);
-    drawCube(-0.35f, 6.25f, -5.75f, 1.1f, 0.8f, 0.10f, 0.30f, 0.26f, 0.24f);
-    drawCube(-0.35f, 6.75f, -5.0f, 0.42f, 0.7f, 0.34f, 0.50f, 0.34f, 0.24f);
+    // Tu quan ao lon co canh, guong dung va tay nam
+    drawCube(-6.35f, 7.2f, -4.95f, 2.9f, 3.25f, 0.72f, 0.42f, 0.27f, 0.17f);
+    drawCube(-6.85f, 7.2f, -4.55f, 0.05f, 3.0f, 0.05f, 0.22f, 0.15f, 0.10f);
+    drawCube(-5.85f, 7.2f, -4.55f, 0.05f, 3.0f, 0.05f, 0.22f, 0.15f, 0.10f);
+    drawGlassCube(-6.35f, 7.25f, -4.50f, 0.62f, 2.45f, 0.04f, 0.75f, 0.86f, 0.92f, 0.55f);
+    drawCube(-7.25f, 7.35f, -4.47f, 0.06f, 0.50f, 0.05f, 0.90f, 0.78f, 0.42f);
+    drawCube(-5.45f, 7.35f, -4.47f, 0.06f, 0.50f, 0.05f, 0.90f, 0.78f, 0.42f);
 
-    drawCube(-6.6f, 8.8f, 6.5f, 0.55f, 0.30f, 0.18f, 0.80f, 0.82f, 0.84f);
-    drawCube(-6.6f, 8.6f, 6.5f, 1.3f, 0.10f, 0.10f, 0.80f, 0.82f, 0.84f);
-    drawCube(-6.05f, 8.35f, 6.5f, 0.10f, 0.65f, 0.10f, 0.80f, 0.82f, 0.84f);
+    // Ban hoc, ghe, may tinh
+    drawCube(-0.45f, 6.02f, -5.45f, 2.25f, 0.16f, 0.88f, 0.54f, 0.36f, 0.22f);
+    drawCube(-1.35f, 5.75f, -5.7f, 0.12f, 0.70f, 0.12f, 0.34f, 0.24f, 0.18f);
+    drawCube(0.45f, 5.75f, -5.7f, 0.12f, 0.70f, 0.12f, 0.34f, 0.24f, 0.18f);
+    drawCube(-0.45f, 6.38f, -5.80f, 1.08f, 0.72f, 0.08f, 0.10f, 0.12f, 0.14f);
+    drawCube(-0.45f, 6.38f, -5.74f, 0.92f, 0.56f, 0.04f, 0.25f, 0.42f, 0.72f);
+    drawCube(-0.45f, 5.83f, -4.75f, 0.78f, 0.28f, 0.75f, 0.36f, 0.28f, 0.24f);
+    drawCube(-0.45f, 6.20f, -4.95f, 0.85f, 0.70f, 0.10f, 0.32f, 0.24f, 0.20f);
 
-    drawGlassCube(-4.2f, 7.8f, 7.88f, 2.8f, 2.0f, 0.06f, 0.55f, 0.78f, 0.95f, 0.42f);
-    drawCube(-4.2f, 7.8f, 8.18f, 4.4f, 1.0f, 0.18f, 0.48f, 0.30f, 0.18f);
-    drawCube(-6.4f, 7.2f, 8.65f, 0.14f, 1.2f, 1.0f, 0.30f, 0.25f, 0.20f);
-    drawCube(-2.0f, 7.2f, 8.65f, 0.14f, 1.2f, 1.0f, 0.30f, 0.25f, 0.20f);
-    drawCube(-4.2f, 6.85f, 9.15f, 4.5f, 0.16f, 0.14f, 0.30f, 0.25f, 0.20f);
+    // Ban trang diem va guong tron
+    drawCube(-0.45f, 6.00f, 5.15f, 2.0f, 0.18f, 0.72f, 0.58f, 0.38f, 0.25f);
+    drawCube(-1.2f, 5.75f, 5.3f, 0.10f, 0.62f, 0.10f, 0.36f, 0.25f, 0.18f);
+    drawCube(0.3f, 5.75f, 5.3f, 0.10f, 0.62f, 0.10f, 0.36f, 0.25f, 0.18f);
+    drawGlassCube(-0.45f, 6.92f, 5.55f, 1.0f, 1.0f, 0.04f, 0.80f, 0.90f, 0.96f, 0.55f);
+    drawCylinder(-0.45f, 6.35f, 5.50f, 0.04f, 0.55f, 0.70f, 0.60f, 0.42f);
+    drawCube(-0.95f, 6.15f, 5.58f, 0.18f, 0.28f, 0.16f, 0.86f, 0.40f, 0.42f);
+    drawCube(-0.65f, 6.15f, 5.58f, 0.14f, 0.35f, 0.12f, 0.35f, 0.45f, 0.78f);
+
+    // Dieu hoa, den phong, tranh va cua so
+    drawCube(-6.6f, 8.72f, 6.50f, 1.25f, 0.34f, 0.20f, 0.86f, 0.88f, 0.90f);
+    drawCube(-6.6f, 8.52f, 6.58f, 1.0f, 0.05f, 0.07f, 0.56f, 0.58f, 0.60f);
+    drawCylinder(-4.1f, 9.25f, 1.4f, 0.10f, 0.38f, 0.75f, 0.64f, 0.42f);
+    glColor3f(1.0f, 0.92f, 0.68f);
+    glPushMatrix();
+    glTranslatef(-4.1f, 8.85f, 1.4f);
+    glutSolidSphere(0.35f, 18, 18);
+    glPopMatrix();
+    drawCube(-6.9f, 7.65f, 6.55f, 0.08f, 1.45f, 1.25f, 0.20f, 0.16f, 0.12f);
+    drawGlassCube(-6.86f, 7.65f, 6.55f, 0.04f, 1.15f, 0.92f, 0.55f, 0.78f, 0.95f, 0.44f);
+
+    // Cua kinh ra ban cong va ban cong dung duoc
+    drawDoorFrame(-4.2f, 5.55f, 7.82f, 2.0f, 2.3f, 0.34f, 0.22f, 0.14f);
+    drawDoorLeaf(-5.2f, 5.55f, 7.95f, 1.0f, 2.22f, balconyDoorAngle, true, 0.36f, 0.22f, 0.13f);
+    drawDoorLeaf(-3.2f, 5.55f, 7.95f, -1.0f, 2.22f, -balconyDoorAngle, true, 0.36f, 0.22f, 0.13f);
+    drawCube(-4.2f, 5.58f, 9.2f, 4.9f, 0.16f, 1.65f, 0.56f, 0.50f, 0.42f);
+    drawCube(-4.2f, 6.15f, 10.05f, 5.1f, 1.1f, 0.12f, 0.28f, 0.22f, 0.18f);
+    drawCube(-6.7f, 6.15f, 9.2f, 0.12f, 1.1f, 1.7f, 0.28f, 0.22f, 0.18f);
+    drawCube(-1.7f, 6.15f, 9.2f, 0.12f, 1.1f, 1.7f, 0.28f, 0.22f, 0.18f);
+    for (int i = 0; i < 8; i++) {
+        drawCylinder(-6.2f + i * 0.58f, 5.65f, 10.02f, 0.025f, 0.9f, 0.22f, 0.18f, 0.14f);
+    }
 }
 
 void drawBathroom() {
+    drawCube(4.85f, 5.54f, -4.65f, 5.0f, 0.04f, 4.8f, 0.78f, 0.86f, 0.88f);
+    drawCube(4.85f, 5.58f, -4.65f, 4.3f, 0.035f, 4.1f, 0.88f, 0.92f, 0.90f);
+
     drawCube(3.15f, 5.62f, -5.4f, 2.1f, 0.18f, 1.25f, 0.95f, 0.95f, 0.92f);
     drawCube(3.15f, 5.85f, -5.4f, 1.75f, 0.26f, 0.95f, 0.78f, 0.88f, 0.94f);
+    drawCube(3.15f, 6.02f, -5.4f, 1.55f, 0.04f, 0.78f, 0.70f, 0.84f, 0.92f);
+    drawGlassCube(3.95f, 6.55f, -5.4f, 0.05f, 1.45f, 1.05f, 0.72f, 0.90f, 0.96f, 0.35f);
     drawCylinder(2.2f, 6.15f, -4.85f, 0.05f, 1.55f, 0.72f, 0.74f, 0.76f);
     drawCylinder(2.2f, 7.65f, -4.85f, 0.25f, 0.06f, 0.72f, 0.74f, 0.76f);
     for (int i = 0; i < 5; i++) {
@@ -926,9 +968,16 @@ void drawBathroom() {
     drawCylinder(4.45f, 5.58f, -7.0f, 0.08f, 0.55f, 0.96f, 0.96f, 0.90f);
     drawCylinder(4.75f, 5.58f, -7.0f, 0.08f, 0.42f, 0.30f, 0.45f, 0.75f);
     drawCylinder(5.05f, 5.58f, -7.0f, 0.08f, 0.35f, 0.86f, 0.30f, 0.34f);
+    drawCube(5.25f, 6.35f, -7.05f, 0.32f, 0.12f, 0.12f, 0.92f, 0.92f, 0.86f);
+    drawCube(5.60f, 6.35f, -7.05f, 0.28f, 0.16f, 0.12f, 0.30f, 0.60f, 0.35f);
+    drawCylinder(6.65f, 5.65f, -6.65f, 0.14f, 0.70f, 0.60f, 0.50f, 0.42f);
+    drawCylinder(6.65f, 6.30f, -6.65f, 0.16f, 0.08f, 0.86f, 0.86f, 0.82f);
+    drawDoorFrame(3.2f, 5.5f, -1.62f, 1.25f, 2.1f);
+    drawDoorLeaf(2.58f, 5.5f, -1.50f, 1.18f, 2.02f, bathroomDoorAngle, false, 0.70f, 0.62f, 0.50f);
 }
 
 void drawToiletRoom() {
+    drawCube(4.8f, 5.54f, 1.0f, 2.7f, 0.04f, 2.6f, 0.84f, 0.84f, 0.80f);
     drawCylinder(4.7f, 5.62f, 1.05f, 0.38f, 0.28f, 0.95f, 0.95f, 0.92f);
     drawCube(4.7f, 5.95f, 0.70f, 0.75f, 0.45f, 0.25f, 0.94f, 0.94f, 0.90f);
     drawCylinder(4.7f, 5.9f, 1.05f, 0.30f, 0.08f, 0.70f, 0.85f, 0.92f);
@@ -937,6 +986,12 @@ void drawToiletRoom() {
     drawCube(3.36f, 6.30f, 2.72f, 0.06f, 0.06f, 0.55f, 0.80f, 0.80f, 0.76f);
     drawCube(5.6f, 6.75f, 2.55f, 0.75f, 0.08f, 0.12f, 0.76f, 0.76f, 0.72f);
     drawCube(5.6f, 6.45f, 2.58f, 0.56f, 0.46f, 0.05f, 0.88f, 0.88f, 0.84f);
+    drawCylinder(3.85f, 6.20f, 1.35f, 0.16f, 0.12f, 0.96f, 0.96f, 0.92f);
+    drawCube(3.85f, 6.20f, 1.15f, 0.42f, 0.08f, 0.08f, 0.70f, 0.70f, 0.66f);
+    drawCube(5.65f, 7.75f, 0.55f, 0.70f, 0.10f, 0.10f, 0.90f, 0.88f, 0.78f);
+    drawCube(5.65f, 7.50f, 0.55f, 0.55f, 0.35f, 0.06f, 0.90f, 0.90f, 0.86f);
+    drawDoorFrame(5.2f, 5.5f, 2.58f, 1.10f, 2.0f);
+    drawDoorLeaf(4.65f, 5.5f, 2.70f, 1.04f, 1.92f, toiletDoorAngle, false, 0.68f, 0.60f, 0.50f);
 }
 
 void drawPorchAndGarden() {
@@ -1093,9 +1148,9 @@ void drawHUD() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBegin(GL_QUADS);
     glVertex2f(0, 600);
-    glVertex2f(250, 600);
-    glVertex2f(250, 450);
-    glVertex2f(0, 450);
+    glVertex2f(300, 600);
+    glVertex2f(300, 365);
+    glVertex2f(0, 365);
     glEnd();
     glDisable(GL_BLEND);
 
@@ -1113,6 +1168,10 @@ void drawHUD() {
     drawText("Chuot: Xoay nhin");
     drawText("O: Mo/Dong cua");
     drawText("K: Mo/Dong cua so");
+    drawText("1: Cua phong ngu");
+    drawText("2: Cua ban cong");
+    drawText("3: Cua nha tam");
+    drawText("4: Cua toilet");
     drawText("F: Quat ON/OFF");
     drawText("R: Mua ON/OFF");
     drawText("T: TV ON/OFF");
@@ -1126,6 +1185,8 @@ void drawHUD() {
     drawText(fanOn ? "Quat: ON" : "Quat: OFF");
     drawText(doorOpen ? "Cua: MO" : "Cua: DONG");
     drawText(windowOpen ? "Cua so: MO" : "Cua so: DONG");
+    drawText(bedroomDoorOpen ? "Phong ngu: MO" : "Phong ngu: DONG");
+    drawText(balconyDoorOpen ? "Ban cong: MO" : "Ban cong: DONG");
     drawText(lightOn ? "Den: ON" : "Den: OFF");
     drawText(isRaining ? "Mua: DANG MUA" : "Mua: KHONG");
 
@@ -1209,6 +1270,7 @@ void renderScene() {
     drawRugAndDecor();
     drawKitchen();
     drawStairs();
+    drawUpperHallAndDoors();
     drawBedroom();
     drawBathroom();
     drawToiletRoom();
@@ -1239,6 +1301,10 @@ void keyboard(unsigned char key, int x, int y) {
         case 'e': case 'E': keys['e'] = true; break;
         case 'o': case 'O': doorOpen = !doorOpen; break;
         case 'k': case 'K': windowOpen = !windowOpen; break;
+        case '1': bedroomDoorOpen = !bedroomDoorOpen; break;
+        case '2': balconyDoorOpen = !balconyDoorOpen; break;
+        case '3': bathroomDoorOpen = !bathroomDoorOpen; break;
+        case '4': toiletDoorOpen = !toiletDoorOpen; break;
         case 'f': case 'F': fanOn = !fanOn; break;
         case 'l': case 'L': lightOn = !lightOn; break;
         case 'r': case 'R': isRaining = !isRaining; break;
@@ -1289,8 +1355,31 @@ void update(int value) {
     else if (!doorOpen && doorAngle > 0.0f) doorAngle -= 2.0f;
     if (windowOpen && windowAngle < 45.0f) windowAngle += 1.5f;
     else if (!windowOpen && windowAngle > 0.0f) windowAngle -= 1.5f;
+    if (bedroomDoorOpen && bedroomDoorAngle < 95.0f) bedroomDoorAngle += 2.0f;
+    else if (!bedroomDoorOpen && bedroomDoorAngle > 0.0f) bedroomDoorAngle -= 2.0f;
+    if (balconyDoorOpen && balconyDoorAngle < 85.0f) balconyDoorAngle += 2.0f;
+    else if (!balconyDoorOpen && balconyDoorAngle > 0.0f) balconyDoorAngle -= 2.0f;
+    if (bathroomDoorOpen && bathroomDoorAngle < 90.0f) bathroomDoorAngle += 2.0f;
+    else if (!bathroomDoorOpen && bathroomDoorAngle > 0.0f) bathroomDoorAngle -= 2.0f;
+    if (toiletDoorOpen && toiletDoorAngle < 90.0f) toiletDoorAngle += 2.0f;
+    else if (!toiletDoorOpen && toiletDoorAngle > 0.0f) toiletDoorAngle -= 2.0f;
     if (fridgeOpen && fridgeDoorAngle < 120.0f) fridgeDoorAngle += 2.0f;
     else if (!fridgeOpen && fridgeDoorAngle > 0.0f) fridgeDoorAngle -= 2.0f;
+
+    if (!keys['q'] && !keys['e']) {
+        float targetY = camY;
+        if (camX > -7.45f && camX < -5.0f && camZ > -6.55f && camZ < -0.1f) {
+            float t = (camZ + 6.55f) / 6.45f;
+            if (t < 0.0f) t = 0.0f;
+            if (t > 1.0f) t = 1.0f;
+            targetY = 2.2f + t * 5.1f;
+        } else if (camY > 5.4f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 10.2f) {
+            targetY = 7.25f;
+        } else if (camY < 5.2f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 8.8f) {
+            targetY = 2.35f;
+        }
+        camY += (targetY - camY) * 0.12f;
+    }
 
     tvChannel += 0.05f;
     rainOffset += 0.1f;
@@ -1324,6 +1413,7 @@ int main(int argc, char** argv) {
     cout << "Phim dieu khien:" << endl;
     cout << "  WASD: Di chuyen | Q/E: Len/Xuong" << endl;
     cout << "  Chuot: Xoay nhin | O: Cua | K: Cua so" << endl;
+    cout << "  1: Cua phong ngu | 2: Cua ban cong | 3: Cua nha tam | 4: Cua toilet" << endl;
     cout << "  F: Quat | R: Mua | T: TV | G: Tu lanh" << endl;
     cout << "  L: Den | M: Che do ve | ESC: Thoat" << endl;
 

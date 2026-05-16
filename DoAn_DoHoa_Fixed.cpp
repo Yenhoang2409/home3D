@@ -1,4 +1,4 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <cmath>
@@ -15,7 +15,7 @@ float camYaw = 0.0f, camPitch = -10.0f;
 float moveSpeed = 0.15f;
 float mouseSensitivity = 0.005f;
 
-bool keys[256] = {false};
+bool keys[256] = { false };
 bool firstMouse = true;
 int lastMouseX = 400, lastMouseY = 300;
 
@@ -115,14 +115,15 @@ void midpointCircle(int xc, int yc, int r) {
         glVertex2i(xc - y, yc + x);
         glVertex2i(xc + y, yc - x);
         glVertex2i(xc - y, yc - x);
-    };
+        };
 
     plotPoints(x, y);
     while (x < y) {
         x++;
         if (p < 0) {
             p += 2 * x + 1;
-        } else {
+        }
+        else {
             y--;
             p += 2 * (x - y) + 1;
         }
@@ -146,7 +147,7 @@ void midpointEllipse(int xc, int yc, int rx, int ry) {
         glVertex2i(xc - x, yc + y);
         glVertex2i(xc + x, yc - y);
         glVertex2i(xc - x, yc - y);
-    };
+        };
 
     while (dx < dy) {
         plotPoints(x, y);
@@ -154,7 +155,8 @@ void midpointEllipse(int xc, int yc, int rx, int ry) {
             x++;
             dx += 2 * ry * ry;
             d1 += dx + (ry * ry);
-        } else {
+        }
+        else {
             x++; y--;
             dx += 2 * ry * ry;
             dy -= 2 * rx * rx;
@@ -162,8 +164,8 @@ void midpointEllipse(int xc, int yc, int rx, int ry) {
         }
     }
 
-    d2 = ((ry * ry) * ((x + 0.5f) * (x + 0.5f))) + 
-         ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
+    d2 = ((ry * ry) * ((x + 0.5f) * (x + 0.5f))) +
+        ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
 
     while (y >= 0) {
         plotPoints(x, y);
@@ -171,7 +173,8 @@ void midpointEllipse(int xc, int yc, int rx, int ry) {
             y--;
             dy -= 2 * rx * rx;
             d2 += (rx * rx) - dy;
-        } else {
+        }
+        else {
             y--; x++;
             dx += 2 * ry * ry;
             dy -= 2 * rx * rx;
@@ -188,7 +191,7 @@ struct Edge {
     float slopeInverse;
 };
 
-void scanlineFill(vector<pair<int,int>>& vertices) {
+void scanlineFill(vector<pair<int, int>>& vertices) {
     int n = vertices.size();
     if (n < 3) return;
 
@@ -264,7 +267,7 @@ int computeCode(float x, float y, float xMin, float yMin, float xMax, float yMax
 }
 
 bool cohenSutherlandClip(float& x1, float& y1, float& x2, float& y2,
-                         float xMin, float yMin, float xMax, float yMax) {
+    float xMin, float yMin, float xMax, float yMax) {
     int code1 = computeCode(x1, y1, xMin, yMin, xMax, yMax);
     int code2 = computeCode(x2, y2, xMin, yMin, xMax, yMax);
     bool accept = false;
@@ -273,22 +276,27 @@ bool cohenSutherlandClip(float& x1, float& y1, float& x2, float& y2,
         if ((code1 == 0) && (code2 == 0)) {
             accept = true;
             break;
-        } else if (code1 & code2) {
+        }
+        else if (code1 & code2) {
             break;
-        } else {
+        }
+        else {
             float x, y;
             int codeOut = code1 ? code1 : code2;
 
             if (codeOut & TOP) {
                 x = x1 + (x2 - x1) * (yMax - y1) / (y2 - y1);
                 y = yMax;
-            } else if (codeOut & BOTTOM) {
+            }
+            else if (codeOut & BOTTOM) {
                 x = x1 + (x2 - x1) * (yMin - y1) / (y2 - y1);
                 y = yMin;
-            } else if (codeOut & RIGHT) {
+            }
+            else if (codeOut & RIGHT) {
                 y = y1 + (y2 - y1) * (xMax - x1) / (x2 - x1);
                 x = xMax;
-            } else {
+            }
+            else {
                 y = y1 + (y2 - y1) * (xMin - x1) / (x2 - x1);
                 x = xMin;
             }
@@ -296,7 +304,8 @@ bool cohenSutherlandClip(float& x1, float& y1, float& x2, float& y2,
             if (codeOut == code1) {
                 x1 = x; y1 = y;
                 code1 = computeCode(x1, y1, xMin, yMin, xMax, yMax);
-            } else {
+            }
+            else {
                 x2 = x; y2 = y;
                 code2 = computeCode(x2, y2, xMin, yMin, xMax, yMax);
             }
@@ -315,19 +324,19 @@ void initZBuffer() {
 }
 
 // ==================== VE HINH 3D NANG CAO ====================
-void setMaterial(float r, float g, float b, float shininess = 32.0f) {
-    GLfloat ambient[] = {r * 0.3f, g * 0.3f, b * 0.3f, 1.0f};
-    GLfloat diffuse[] = {r, g, b, 1.0f};
-    GLfloat specular[] = {0.8f, 0.8f, 0.8f, 1.0f};
+void setMaterial(float r, float g, float b, float shininess = 64.0f) {
+    GLfloat ambient[] = { r * 0.4f, g * 0.4f, b * 0.45f, 1.0f };
+    GLfloat diffuse[] = { r, g, b, 1.0f };
+    GLfloat specular[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 }
 
-void drawCube(float x, float y, float z, float w, float h, float d, 
-              float r, float g, float b, float a = 1.0f) {
+void drawCube(float x, float y, float z, float w, float h, float d,
+    float r, float g, float b, float a = 1.0f) {
     glPushMatrix();
     glTranslatef(x, y, z);
     glScalef(w, h, d);
@@ -343,7 +352,7 @@ void drawCube(float x, float y, float z, float w, float h, float d,
 }
 
 void drawGlassCube(float x, float y, float z, float w, float h, float d,
-                   float r, float g, float b, float a = 0.45f) {
+    float r, float g, float b, float a = 0.45f) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(r, g, b, a);
@@ -357,7 +366,7 @@ void drawGlassCube(float x, float y, float z, float w, float h, float d,
 }
 
 void drawCylinder(float x, float y, float z, float radius, float height,
-                  float r, float g, float b, int slices = 24) {
+    float r, float g, float b, int slices = 24) {
     glColor3f(r, g, b);
     setMaterial(r, g, b, 40.0f);
     glPushMatrix();
@@ -373,7 +382,7 @@ void drawCylinder(float x, float y, float z, float radius, float height,
 }
 
 void drawDoorLeaf(float hingeX, float hingeY, float hingeZ, float width, float height,
-                  float angle, bool glass, float r, float g, float b) {
+    float angle, bool glass, float r, float g, float b) {
     glPushMatrix();
     glTranslatef(hingeX, hingeY, hingeZ);
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
@@ -385,7 +394,8 @@ void drawDoorLeaf(float hingeX, float hingeY, float hingeZ, float width, float h
         drawCube(0.0f, -height * 0.25f, 0.045f, width, 0.06f, 0.04f, r, g, b);
         drawCube(-width * 0.35f, 0.0f, 0.045f, 0.06f, height, 0.04f, r, g, b);
         drawCube(width * 0.35f, 0.0f, 0.045f, 0.06f, height, 0.04f, r, g, b);
-    } else {
+    }
+    else {
         drawCube(0.0f, 0.0f, 0.0f, width, height, 0.10f, r, g, b);
         drawCube(0.0f, height * 0.24f, 0.06f, width * 0.72f, height * 0.22f, 0.04f, r * 0.75f, g * 0.75f, b * 0.75f);
         drawCube(0.0f, -height * 0.18f, 0.06f, width * 0.72f, height * 0.34f, 0.04f, r * 0.75f, g * 0.75f, b * 0.75f);
@@ -399,7 +409,7 @@ void drawDoorLeaf(float hingeX, float hingeY, float hingeZ, float width, float h
 }
 
 void drawDoorFrame(float x, float y, float z, float width, float height,
-                   float r = 0.36f, float g = 0.22f, float b = 0.13f) {
+    float r = 0.36f, float g = 0.22f, float b = 0.13f) {
     drawCube(x, y + height, z, width + 0.18f, 0.12f, 0.18f, r, g, b);
     drawCube(x - width / 2.0f, y + height / 2.0f, z, 0.12f, height, 0.18f, r, g, b);
     drawCube(x + width / 2.0f, y + height / 2.0f, z, 0.12f, height, 0.18f, r, g, b);
@@ -450,8 +460,8 @@ void drawFloor() {
             float g = livingArea ? (lightTile ? 0.48f : 0.36f) : (lightTile ? 0.82f : 0.74f);
             float b = livingArea ? (lightTile ? 0.30f : 0.22f) : (lightTile ? 0.72f : 0.66f);
 
-            drawCube(i * 1.0f + 0.5f, 0.02f, j * 1.0f + 0.5f, 
-                     1.0f, 0.04f, 1.0f, r, g, b);
+            drawCube(i * 1.0f + 0.5f, 0.02f, j * 1.0f + 0.5f,
+                1.0f, 0.04f, 1.0f, r, g, b);
         }
     }
 
@@ -463,7 +473,7 @@ void drawFloor() {
             float g = bedroom ? (lightTile ? 0.43f : 0.33f) : (lightTile ? 0.86f : 0.78f);
             float b = bedroom ? (lightTile ? 0.25f : 0.18f) : (lightTile ? 0.80f : 0.72f);
             drawCube(i * 1.0f + 0.5f, 5.42f, j * 1.0f + 0.5f,
-                     1.0f, 0.04f, 1.0f, r, g, b);
+                1.0f, 0.04f, 1.0f, r, g, b);
         }
     }
 
@@ -538,29 +548,24 @@ void drawWalls() {
 
 // ==================== CUA CAO BANG TUONG, TRONG SUOT KHI MO ====================
 void drawDoor() {
-    // Cua ben trai tuong - CAO BANG TUONG (tu nen den tran)
     float doorX = 0.6f;
     float doorZ = 7.4f;
-    float doorHeight = 5.0f;  // CAO BANG TUONG
+    float doorHeight = 5.0f;
     float doorWidth = 2.0f;
 
-    // Khung cua co dinh
     drawCube(doorX, doorHeight / 2.0f, doorZ, doorWidth + 0.2f, doorHeight + 0.2f, 0.15f, 0.5f, 0.35f, 0.2f);
 
-    // Canh cua (xoay quanh truc ben trai)
     glPushMatrix();
     glTranslatef(doorX - doorWidth / 2.0f + 0.1f, doorHeight / 2.0f, doorZ + 0.05f);
     glRotatef(doorAngle, 0.0f, 1.0f, 0.0f);
     glTranslatef(doorWidth / 2.0f - 0.1f, 0.0f, 0.0f);
 
-    // Tam cua - TRONG SUOT khi mo
     if (doorOpen) {
-        // Khi mo: cua trong suot nhin thay ben trong
-        glColor4f(0.85f, 0.75f, 0.55f, 0.35f); // Trong suot
+        glColor4f(0.85f, 0.75f, 0.55f, 0.35f);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    } else {
-        // Khi dong: cua go dac
+    }
+    else {
         glColor4f(0.75f, 0.55f, 0.35f, 1.0f);
     }
 
@@ -571,7 +576,6 @@ void drawDoor() {
 
     if (doorOpen) glDisable(GL_BLEND);
 
-    // O kinh cua - LUON TRONG SUOT
     glColor4f(0.7f, 0.85f, 0.95f, 0.4f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -582,7 +586,6 @@ void drawDoor() {
     glPopMatrix();
     glDisable(GL_BLEND);
 
-    // Tay nam cua
     glColor3f(0.9f, 0.8f, 0.3f);
     glPushMatrix();
     glTranslatef(0.6f, 0.0f, 0.1f);
@@ -598,16 +601,13 @@ void drawWindow() {
     float winY = 3.0f;
     float winZ = 0.0f;
 
-    // Khung cua so
     drawCube(winX, winY, winZ, 0.15f, 2.0f, 2.5f, 0.6f, 0.4f, 0.25f);
 
-    // Canh cua so mo ra ngoai
     glPushMatrix();
     glTranslatef(winX + 0.1f, winY, winZ + 1.0f);
     glRotatef(windowAngle, 0.0f, 1.0f, 0.0f);
     glTranslatef(0.0f, 0.0f, -1.0f);
 
-    // Kinh cua so
     glColor4f(0.5f, 0.7f, 0.9f, 0.4f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -620,7 +620,6 @@ void drawWindow() {
 
     glPopMatrix();
 
-    // Thanh chan cua so
     drawCube(winX + 0.1f, winY, winZ, 0.05f, 1.8f, 0.05f, 0.7f, 0.5f, 0.3f);
     drawCube(winX + 0.1f, winY, winZ, 0.05f, 0.05f, 2.0f, 0.7f, 0.5f, 0.3f);
 }
@@ -630,11 +629,9 @@ void drawFan() {
     glPushMatrix();
     glTranslatef(0.0f, 4.8f, 0.0f);
 
-    // Den trang tri quat
     glColor3f(1.0f, 0.95f, 0.8f);
     glutSolidSphere(0.2f, 16, 16);
 
-    // Truc quat
     glColor3f(0.2f, 0.2f, 0.25f);
     glPushMatrix();
     glTranslatef(0.0f, -0.2f, 0.0f);
@@ -644,21 +641,18 @@ void drawFan() {
     gluDeleteQuadric(cyl);
     glPopMatrix();
 
-    // Dong co
     glColor3f(0.3f, 0.3f, 0.35f);
     glPushMatrix();
     glTranslatef(0.0f, -0.4f, 0.0f);
     glutSolidSphere(0.18f, 16, 16);
     glPopMatrix();
 
-    // Canh quat xoay
     glRotatef(fanAngle, 0.0f, 1.0f, 0.0f);
 
     for (int i = 0; i < 5; i++) {
         glPushMatrix();
         glRotatef(i * 72.0f, 0.0f, 1.0f, 0.0f);
 
-        // Canh quat trong suot
         glColor4f(0.8f, 0.9f, 0.95f, 0.7f);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -670,7 +664,6 @@ void drawFan() {
         glEnd();
         glDisable(GL_BLEND);
 
-        // Vien canh
         glColor3f(0.6f, 0.7f, 0.8f);
         glBegin(GL_LINE_LOOP);
         glVertex3f(-0.08f, 0.0f, 0.1f);
@@ -687,7 +680,6 @@ void drawFan() {
 
 // ==================== NOI THAT SANG TRONG ====================
 void drawSofa() {
-    // Ghe sofa hien dai
     drawCube(-4.0f, 0.6f, 3.0f, 3.0f, 0.5f, 1.2f, 0.4f, 0.3f, 0.5f);
     drawCube(-4.0f, 1.2f, 2.4f, 3.0f, 0.8f, 0.2f, 0.4f, 0.3f, 0.5f);
     drawCube(-5.2f, 0.4f, 3.0f, 0.2f, 0.4f, 1.2f, 0.35f, 0.25f, 0.45f);
@@ -696,7 +688,6 @@ void drawSofa() {
 }
 
 void drawCoffeeTable() {
-    // Ban tra kinh
     glColor4f(0.8f, 0.9f, 1.0f, 0.6f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -714,12 +705,12 @@ void drawCoffeeTable() {
 }
 
 void drawTV() {
-    // Ke tivi
     drawCube(0.0f, 0.8f, -6.8f, 4.0f, 1.2f, 0.4f, 0.2f, 0.15f, 0.1f);
 
     if (tvOn) {
         glColor3f(0.1f, 0.15f, 0.3f);
-    } else {
+    }
+    else {
         glColor3f(0.05f, 0.05f, 0.05f);
     }
     glPushMatrix();
@@ -854,146 +845,188 @@ void drawStairs() {
 }
 
 void drawUpperHallAndDoors() {
+    // Sàn hành lang tầng 2
     drawCube(-0.1f, 5.55f, -0.25f, 12.4f, 0.08f, 1.3f, 0.80f, 0.67f, 0.48f);
     drawCube(-0.1f, 5.60f, -0.25f, 11.6f, 0.035f, 0.9f, 0.72f, 0.28f, 0.22f);
-    drawCube(-0.1f, 7.75f, 0.50f, 12.0f, 0.10f, 0.12f, 0.34f, 0.22f, 0.14f);
-    for (int i = -5; i <= 5; i++) {
-        drawCylinder((float)i, 5.7f, 0.50f, 0.035f, 1.7f, 0.20f, 0.16f, 0.12f);
-    }
 
-    drawDoorFrame(-0.35f, 5.5f, 0.68f, 1.45f, 2.25f);
-    drawDoorLeaf(-1.08f, 5.5f, 0.78f, 1.38f, 2.18f, bedroomDoorAngle, false, 0.58f, 0.36f, 0.22f);
+    float wallR = 0.92f, wallG = 0.90f, wallB = 0.86f;
 
-    drawCube(3.2f, 7.65f, -1.62f, 1.45f, 0.12f, 0.16f, 0.36f, 0.22f, 0.13f);
-    drawCube(5.2f, 7.50f, 2.58f, 1.30f, 0.12f, 0.16f, 0.36f, 0.22f, 0.13f);
+    // ================= TƯỜNG PHÒNG NGỦ (BÊN TRÁI) =================
+    drawCube(-1.5f, 7.8f, 3.8f, 0.25f, 4.4f, 7.6f, wallR, wallG, wallB);
+    drawCube(-4.2f, 8.8f, 7.7f, 5.0f, 2.4f, 0.2f, wallR, wallG, wallB); // Mảng tường trên cửa ban công
+    drawDoorFrame(-1.45f, 5.5f, 0.68f, 1.45f, 2.25f);
+    drawDoorLeaf(-2.18f, 5.5f, 0.78f, 1.38f, 2.18f, bedroomDoorAngle, false, 0.58f, 0.36f, 0.22f);
+
+    // ================= TƯỜNG KHU VỰC NHÀ TẮM & TOILET (BÊN PHẢI) =================
+    // Vách dọc chia đôi nhà tắm (trái) và toilet (phải)
+    drawCube(4.5f, 7.8f, -4.5f, 0.2f, 4.4f, 5.0f, wallR, wallG, wallB);
+
+    // Vách dọc ngăn hành lang và hông nhà tắm
+    drawCube(1.0f, 7.8f, -4.5f, 0.2f, 4.4f, 5.0f, wallR, wallG, wallB);
+
+    // Vách ngang mặt tiền NHÀ TẮM (Hướng thẳng ra hành lang)
+    drawCube(1.2f, 7.8f, -2.0f, 0.4f, 4.4f, 0.2f, wallR, wallG, wallB); // Mảng trái cửa
+    drawCube(3.55f, 7.8f, -2.0f, 1.9f, 4.4f, 0.2f, wallR, wallG, wallB); // Mảng phải cửa
+    drawCube(2.0f, 8.8f, -2.0f, 1.2f, 2.4f, 0.2f, wallR, wallG, wallB); // Mảng trên cửa
+
+    // Vách ngang mặt tiền TOILET (Hướng thẳng ra hành lang)
+    drawCube(4.7f, 7.8f, -2.0f, 0.4f, 4.4f, 0.2f, wallR, wallG, wallB); // Mảng trái cửa
+    drawCube(6.8f, 7.8f, -2.0f, 1.4f, 4.4f, 0.2f, wallR, wallG, wallB); // Mảng phải cửa
+    drawCube(5.5f, 8.8f, -2.0f, 1.2f, 2.4f, 0.2f, wallR, wallG, wallB); // Mảng trên cửa
+}
+
+void drawPillow(float x, float y, float z) {
+    glColor3f(0.98f, 0.98f, 0.98f); // Trắng tinh
+    setMaterial(0.98f, 0.98f, 0.98f, 20.0f);
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glScalef(1.0f, 0.3f, 0.6f); // Bóp dẹt hình cầu thành cái gối
+    glutSolidSphere(0.45f, 24, 24);
+    glPopMatrix();
 }
 
 void drawBedroom() {
+    // Sàn phòng ngủ
     drawCube(-3.9f, 5.53f, 2.35f, 5.2f, 0.04f, 3.7f, 0.88f, 0.78f, 0.58f);
     drawCube(-3.9f, 5.56f, 2.35f, 4.4f, 0.03f, 2.7f, 0.78f, 0.36f, 0.32f);
 
-    // Giuong doi: khung go, nem sang mau, chan ga goi ro rang
+    // ================= KHU VỰC GIƯỜNG NGỦ =================
+    // Khung giường bằng gỗ (cứng)
     drawCube(-4.1f, 5.82f, 2.35f, 4.25f, 0.45f, 3.05f, 0.55f, 0.34f, 0.20f);
-    drawCylinder(-6.05f, 5.85f, 0.95f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
-    drawCylinder(-2.15f, 5.85f, 0.95f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
-    drawCylinder(-6.05f, 5.85f, 3.75f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
-    drawCylinder(-2.15f, 5.85f, 3.75f, 0.08f, 0.45f, 0.38f, 0.24f, 0.16f);
-    drawCube(-4.1f, 6.12f, 2.35f, 3.95f, 0.34f, 2.72f, 0.96f, 0.93f, 0.84f);
-    drawCube(-4.1f, 6.34f, 2.82f, 4.05f, 0.18f, 1.75f, 0.74f, 0.86f, 0.96f);
-    drawCube(-4.1f, 6.45f, 1.35f, 4.0f, 0.16f, 0.82f, 0.98f, 0.98f, 0.92f);
-    drawCube(-5.15f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
-    drawCube(-4.05f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
-    drawCube(-3.0f, 6.62f, 1.05f, 0.92f, 0.22f, 0.52f, 0.98f, 0.96f, 0.90f);
-    drawCube(-4.1f, 6.9f, 3.88f, 4.45f, 1.25f, 0.30f, 0.48f, 0.29f, 0.18f);
+
+    // Đệm (Mattress) - Màu kem, đẩy lên cao hơn
+    drawCube(-4.1f, 6.15f, 2.35f, 4.0f, 0.25f, 2.9f, 0.95f, 0.92f, 0.88f);
+
+    // Chăn bồng bềnh (Dùng Sphere kéo giãn để tạo độ mềm, phồng)
+    glColor3f(0.45f, 0.65f, 0.85f); // Màu xanh pastel êm ái
+    setMaterial(0.45f, 0.65f, 0.85f, 10.0f); // Giảm độ bóng để giống vải
+    glPushMatrix();
+    glTranslatef(-4.1f, 6.35f, 2.8f); // Đặt ở nửa dưới giường
+    glScalef(3.9f, 0.3f, 2.0f); // Kéo giãn hình cầu bao trùm giường
+    glutSolidSphere(0.5f, 30, 30);
+    glPopMatrix();
+
+    // 2 Cái gối bông mềm
+    drawPillow(-4.8f, 6.35f, 1.2f);
+    drawPillow(-3.4f, 6.35f, 1.2f);
+
+    // Tựa đầu giường (bọc nệm)
+    glColor3f(0.8f, 0.75f, 0.7f);
+    glPushMatrix();
+    glTranslatef(-4.1f, 6.5f, 0.8f);
+    glScalef(4.0f, 1.2f, 0.3f);
+    glutSolidSphere(0.5f, 20, 20);
+    glPopMatrix();
+    // ======================================================
 
     // Tu dau giuong va den ngu
     for (int side = -1; side <= 1; side += 2) {
         float x = side < 0 ? -6.7f : -1.5f;
         drawCube(x, 5.9f, 1.15f, 0.9f, 0.58f, 0.78f, 0.50f, 0.32f, 0.20f);
         drawCube(x, 6.22f, 1.15f, 0.72f, 0.05f, 0.58f, 0.78f, 0.68f, 0.46f);
-        drawCube(x, 6.45f, 1.15f, 0.42f, 0.34f, 0.42f, 0.96f, 0.82f, 0.52f);
         drawCylinder(x, 6.22f, 1.15f, 0.04f, 0.35f, 0.72f, 0.62f, 0.42f);
     }
 
-    // Tu quan ao lon co canh, guong dung va tay nam
+    // Tu quan ao lon
     drawCube(-6.35f, 7.2f, -4.95f, 2.9f, 3.25f, 0.72f, 0.42f, 0.27f, 0.17f);
-    drawCube(-6.85f, 7.2f, -4.55f, 0.05f, 3.0f, 0.05f, 0.22f, 0.15f, 0.10f);
-    drawCube(-5.85f, 7.2f, -4.55f, 0.05f, 3.0f, 0.05f, 0.22f, 0.15f, 0.10f);
     drawGlassCube(-6.35f, 7.25f, -4.50f, 0.62f, 2.45f, 0.04f, 0.75f, 0.86f, 0.92f, 0.55f);
-    drawCube(-7.25f, 7.35f, -4.47f, 0.06f, 0.50f, 0.05f, 0.90f, 0.78f, 0.42f);
-    drawCube(-5.45f, 7.35f, -4.47f, 0.06f, 0.50f, 0.05f, 0.90f, 0.78f, 0.42f);
 
-    // Ban hoc, ghe, may tinh
-    drawCube(-0.45f, 6.02f, -5.45f, 2.25f, 0.16f, 0.88f, 0.54f, 0.36f, 0.22f);
-    drawCube(-1.35f, 5.75f, -5.7f, 0.12f, 0.70f, 0.12f, 0.34f, 0.24f, 0.18f);
-    drawCube(0.45f, 5.75f, -5.7f, 0.12f, 0.70f, 0.12f, 0.34f, 0.24f, 0.18f);
-    drawCube(-0.45f, 6.38f, -5.80f, 1.08f, 0.72f, 0.08f, 0.10f, 0.12f, 0.14f);
-    drawCube(-0.45f, 6.38f, -5.74f, 0.92f, 0.56f, 0.04f, 0.25f, 0.42f, 0.72f);
-    drawCube(-0.45f, 5.83f, -4.75f, 0.78f, 0.28f, 0.75f, 0.36f, 0.28f, 0.24f);
-    drawCube(-0.45f, 6.20f, -4.95f, 0.85f, 0.70f, 0.10f, 0.32f, 0.24f, 0.20f);
+    // ================= KHU VỰC BAN CÔNG =================
+    // Mở rộng sàn ban công (kéo dài độ sâu từ 1.65f lên 3.5f)
+    drawCube(-4.2f, 5.58f, 10.0f, 4.9f, 0.16f, 3.5f, 0.56f, 0.50f, 0.42f);
 
-    // Ban trang diem va guong tron
-    drawCube(-0.45f, 6.00f, 5.15f, 2.0f, 0.18f, 0.72f, 0.58f, 0.38f, 0.25f);
-    drawCube(-1.2f, 5.75f, 5.3f, 0.10f, 0.62f, 0.10f, 0.36f, 0.25f, 0.18f);
-    drawCube(0.3f, 5.75f, 5.3f, 0.10f, 0.62f, 0.10f, 0.36f, 0.25f, 0.18f);
-    drawGlassCube(-0.45f, 6.92f, 5.55f, 1.0f, 1.0f, 0.04f, 0.80f, 0.90f, 0.96f, 0.55f);
-    drawCylinder(-0.45f, 6.35f, 5.50f, 0.04f, 0.55f, 0.70f, 0.60f, 0.42f);
-    drawCube(-0.95f, 6.15f, 5.58f, 0.18f, 0.28f, 0.16f, 0.86f, 0.40f, 0.42f);
-    drawCube(-0.65f, 6.15f, 5.58f, 0.14f, 0.35f, 0.12f, 0.35f, 0.45f, 0.78f);
+    // Đẩy lan can ra ngoài rìa ban công mới
+    drawCube(-4.2f, 6.15f, 11.65f, 5.1f, 1.1f, 0.12f, 0.28f, 0.22f, 0.18f); // Lan can ngang
+    drawCube(-6.7f, 6.15f, 10.0f, 0.12f, 1.1f, 3.4f, 0.28f, 0.22f, 0.18f); // Lan can dọc trái
+    drawCube(-1.7f, 6.15f, 10.0f, 0.12f, 1.1f, 3.4f, 0.28f, 0.22f, 0.18f); // Lan can dọc phải
 
-    // Dieu hoa, den phong, tranh va cua so
-    drawCube(-6.6f, 8.72f, 6.50f, 1.25f, 0.34f, 0.20f, 0.86f, 0.88f, 0.90f);
-    drawCube(-6.6f, 8.52f, 6.58f, 1.0f, 0.05f, 0.07f, 0.56f, 0.58f, 0.60f);
-    drawCylinder(-4.1f, 9.25f, 1.4f, 0.10f, 0.38f, 0.75f, 0.64f, 0.42f);
-    glColor3f(1.0f, 0.92f, 0.68f);
-    glPushMatrix();
-    glTranslatef(-4.1f, 8.85f, 1.4f);
-    glutSolidSphere(0.35f, 18, 18);
-    glPopMatrix();
-    drawCube(-6.9f, 7.65f, 6.55f, 0.08f, 1.45f, 1.25f, 0.20f, 0.16f, 0.12f);
-    drawGlassCube(-6.86f, 7.65f, 6.55f, 0.04f, 1.15f, 0.92f, 0.55f, 0.78f, 0.95f, 0.44f);
+    // Cột lan can (Thưa ra cho dễ nhìn cảnh)
+    for (int i = 0; i < 6; i++) {
+        drawCylinder(-6.2f + i * 0.8f, 5.65f, 11.6f, 0.025f, 0.9f, 0.22f, 0.18f, 0.14f);
+    }
 
-    // Cua kinh ra ban cong va ban cong dung duoc
+    // Khung cửa kính ra ban công
     drawDoorFrame(-4.2f, 5.55f, 7.82f, 2.0f, 2.3f, 0.34f, 0.22f, 0.14f);
     drawDoorLeaf(-5.2f, 5.55f, 7.95f, 1.0f, 2.22f, balconyDoorAngle, true, 0.36f, 0.22f, 0.13f);
     drawDoorLeaf(-3.2f, 5.55f, 7.95f, -1.0f, 2.22f, -balconyDoorAngle, true, 0.36f, 0.22f, 0.13f);
-    drawCube(-4.2f, 5.58f, 9.2f, 4.9f, 0.16f, 1.65f, 0.56f, 0.50f, 0.42f);
-    drawCube(-4.2f, 6.15f, 10.05f, 5.1f, 1.1f, 0.12f, 0.28f, 0.22f, 0.18f);
-    drawCube(-6.7f, 6.15f, 9.2f, 0.12f, 1.1f, 1.7f, 0.28f, 0.22f, 0.18f);
-    drawCube(-1.7f, 6.15f, 9.2f, 0.12f, 1.1f, 1.7f, 0.28f, 0.22f, 0.18f);
-    for (int i = 0; i < 8; i++) {
-        drawCylinder(-6.2f + i * 0.58f, 5.65f, 10.02f, 0.025f, 0.9f, 0.22f, 0.18f, 0.14f);
-    }
 }
 
 void drawBathroom() {
-    drawCube(4.85f, 5.54f, -4.65f, 5.0f, 0.04f, 4.8f, 0.78f, 0.86f, 0.88f);
-    drawCube(4.85f, 5.58f, -4.65f, 4.3f, 0.035f, 4.1f, 0.88f, 0.92f, 0.90f);
+    // Sàn nhà tắm rộng rãi hơn
+    drawCube(2.75f, 5.54f, -4.5f, 3.5f, 0.04f, 5.0f, 0.78f, 0.86f, 0.88f);
 
-    drawCube(3.15f, 5.62f, -5.4f, 2.1f, 0.18f, 1.25f, 0.95f, 0.95f, 0.92f);
-    drawCube(3.15f, 5.85f, -5.4f, 1.75f, 0.26f, 0.95f, 0.78f, 0.88f, 0.94f);
-    drawCube(3.15f, 6.02f, -5.4f, 1.55f, 0.04f, 0.78f, 0.70f, 0.84f, 0.92f);
-    drawGlassCube(3.95f, 6.55f, -5.4f, 0.05f, 1.45f, 1.05f, 0.72f, 0.90f, 0.96f, 0.35f);
-    drawCylinder(2.2f, 6.15f, -4.85f, 0.05f, 1.55f, 0.72f, 0.74f, 0.76f);
-    drawCylinder(2.2f, 7.65f, -4.85f, 0.25f, 0.06f, 0.72f, 0.74f, 0.76f);
-    for (int i = 0; i < 5; i++) {
-        drawCylinder(2.05f + i * 0.08f, 7.48f, -4.85f, 0.012f, 0.25f, 0.45f, 0.65f, 0.90f, 8);
-    }
+    // Cửa nhà tắm (Nằm ngay mặt tiền hành lang)
+    drawDoorFrame(2.0f, 5.5f, -2.0f, 1.2f, 2.1f);
+    drawDoorLeaf(1.4f, 5.5f, -2.0f, 1.15f, 2.05f, bathroomDoorAngle, false, 0.70f, 0.85f, 0.90f);
 
-    drawCylinder(5.55f, 5.62f, -5.45f, 0.45f, 0.18f, 0.96f, 0.96f, 0.94f);
-    drawCylinder(5.55f, 5.8f, -5.45f, 0.34f, 0.10f, 0.74f, 0.86f, 0.92f);
-    drawCylinder(5.55f, 5.9f, -5.45f, 0.04f, 0.24f, 0.70f, 0.72f, 0.74f);
-    drawGlassCube(5.55f, 7.05f, -7.35f, 1.1f, 1.1f, 0.04f, 0.78f, 0.90f, 0.96f, 0.55f);
-    drawCube(5.55f, 6.05f, -7.30f, 0.62f, 0.12f, 0.08f, 0.90f, 0.88f, 0.82f);
-    drawCylinder(4.45f, 5.58f, -7.0f, 0.08f, 0.55f, 0.96f, 0.96f, 0.90f);
-    drawCylinder(4.75f, 5.58f, -7.0f, 0.08f, 0.42f, 0.30f, 0.45f, 0.75f);
-    drawCylinder(5.05f, 5.58f, -7.0f, 0.08f, 0.35f, 0.86f, 0.30f, 0.34f);
-    drawCube(5.25f, 6.35f, -7.05f, 0.32f, 0.12f, 0.12f, 0.92f, 0.92f, 0.86f);
-    drawCube(5.60f, 6.35f, -7.05f, 0.28f, 0.16f, 0.12f, 0.30f, 0.60f, 0.35f);
-    drawCylinder(6.65f, 5.65f, -6.65f, 0.14f, 0.70f, 0.60f, 0.50f, 0.42f);
-    drawCylinder(6.65f, 6.30f, -6.65f, 0.16f, 0.08f, 0.86f, 0.86f, 0.82f);
-    drawDoorFrame(3.2f, 5.5f, -1.62f, 1.25f, 2.1f);
-    drawDoorLeaf(2.58f, 5.5f, -1.50f, 1.18f, 2.02f, bathroomDoorAngle, false, 0.70f, 0.62f, 0.50f);
+    // Bồn tắm nằm chân thực (Có lõm bên trong, mô phỏng nước)
+    glColor3f(0.95f, 0.95f, 0.98f);
+    glPushMatrix();
+    glTranslatef(3.5f, 6.0f, -6.0f);
+    // Vỏ bồn tắm bo tròn
+    glPushMatrix();
+    glScalef(1.2f, 0.4f, 2.2f);
+    glutSolidSphere(0.8f, 30, 30);
+    glPopMatrix();
+    // Lõi bồn tắm chứa nước (Làm giả độ sâu)
+    glColor3f(0.4f, 0.8f, 0.9f);
+    glPushMatrix();
+    glTranslatef(0.0f, 0.2f, 0.0f);
+    glScalef(1.0f, 0.1f, 2.0f);
+    glutSolidSphere(0.7f, 20, 20);
+    glPopMatrix();
+    glPopMatrix();
+
+    // Vòi sen bồn tắm
+    drawCylinder(3.5f, 6.5f, -7.2f, 0.05f, 1.2f, 0.8f, 0.8f, 0.8f);
+    drawCylinder(3.5f, 7.7f, -7.0f, 0.15f, 0.05f, 0.8f, 0.8f, 0.8f);
+
+    // Bồn rửa mặt bo tròn tinh tế
+    drawCylinder(1.5f, 6.2f, -4.0f, 0.4f, 0.15f, 0.95f, 0.95f, 0.95f);
+    drawCube(1.5f, 5.85f, -4.0f, 0.8f, 0.6f, 0.8f, 0.3f, 0.2f, 0.1f); // Tủ gỗ
+    drawGlassCube(1.5f, 7.0f, -4.45f, 1.2f, 1.0f, 0.02f, 0.8f, 0.9f, 1.0f, 0.6f); // Gương
+
+    // Vách kính tắm đứng (Ngăn cách ướt/khô)
+    drawGlassCube(2.5f, 6.6f, -5.5f, 0.05f, 2.2f, 3.0f, 0.7f, 0.85f, 0.95f, 0.3f);
 }
-
 void drawToiletRoom() {
-    drawCube(4.8f, 5.54f, 1.0f, 2.7f, 0.04f, 2.6f, 0.84f, 0.84f, 0.80f);
-    drawCylinder(4.7f, 5.62f, 1.05f, 0.38f, 0.28f, 0.95f, 0.95f, 0.92f);
-    drawCube(4.7f, 5.95f, 0.70f, 0.75f, 0.45f, 0.25f, 0.94f, 0.94f, 0.90f);
-    drawCylinder(4.7f, 5.9f, 1.05f, 0.30f, 0.08f, 0.70f, 0.85f, 0.92f);
-    drawCube(4.7f, 6.55f, 0.42f, 0.9f, 0.75f, 0.18f, 0.95f, 0.95f, 0.92f);
-    drawCube(3.35f, 6.35f, 2.45f, 0.28f, 0.28f, 0.18f, 0.86f, 0.86f, 0.80f);
-    drawCube(3.36f, 6.30f, 2.72f, 0.06f, 0.06f, 0.55f, 0.80f, 0.80f, 0.76f);
-    drawCube(5.6f, 6.75f, 2.55f, 0.75f, 0.08f, 0.12f, 0.76f, 0.76f, 0.72f);
-    drawCube(5.6f, 6.45f, 2.58f, 0.56f, 0.46f, 0.05f, 0.88f, 0.88f, 0.84f);
-    drawCylinder(3.85f, 6.20f, 1.35f, 0.16f, 0.12f, 0.96f, 0.96f, 0.92f);
-    drawCube(3.85f, 6.20f, 1.15f, 0.42f, 0.08f, 0.08f, 0.70f, 0.70f, 0.66f);
-    drawCube(5.65f, 7.75f, 0.55f, 0.70f, 0.10f, 0.10f, 0.90f, 0.88f, 0.78f);
-    drawCube(5.65f, 7.50f, 0.55f, 0.55f, 0.35f, 0.06f, 0.90f, 0.90f, 0.86f);
-    drawDoorFrame(5.2f, 5.5f, 2.58f, 1.10f, 2.0f);
-    drawDoorLeaf(4.65f, 5.5f, 2.70f, 1.04f, 1.92f, toiletDoorAngle, false, 0.68f, 0.60f, 0.50f);
-}
+    // Sàn Toilet
+    drawCube(6.0f, 5.54f, -4.5f, 3.0f, 0.04f, 5.0f, 0.84f, 0.84f, 0.80f);
 
+    // Cửa Toilet (Nằm cạnh cửa nhà tắm)
+    drawDoorFrame(5.5f, 5.5f, -2.0f, 1.2f, 2.1f);
+    drawDoorLeaf(4.9f, 5.5f, -2.0f, 1.15f, 2.05f, toiletDoorAngle, false, 0.68f, 0.80f, 0.85f);
+
+    // Bồn cầu (Toilet) - Bo cong mềm mại
+    glColor3f(0.95f, 0.95f, 0.98f);
+    drawCube(6.0f, 6.2f, -6.8f, 0.8f, 0.6f, 0.4f, 0.95f, 0.95f, 0.98f); // Két nước sau lưng
+
+    // Bệ ngồi lồi ra trước
+    glPushMatrix();
+    glTranslatef(6.0f, 5.9f, -6.2f);
+    glScalef(0.8f, 0.4f, 1.2f);
+    glutSolidSphere(0.5f, 20, 20);
+    glPopMatrix();
+
+    // Nắp đậy mỏng
+    glPushMatrix();
+    glTranslatef(6.0f, 6.1f, -6.2f);
+    glScalef(0.8f, 0.05f, 1.1f);
+    glutSolidSphere(0.5f, 20, 20);
+    glPopMatrix();
+
+    // Hộp giấy vệ sinh
+    drawCube(5.1f, 6.2f, -6.0f, 0.1f, 0.2f, 0.2f, 0.9f, 0.9f, 0.9f);
+    drawCylinder(5.2f, 6.2f, -6.0f, 0.1f, 0.15f, 0.9f, 0.9f, 0.9f);
+
+    // Thêm chậu cây xanh trang trí góc phòng
+    drawCylinder(7.0f, 5.8f, -3.0f, 0.2f, 0.4f, 0.8f, 0.8f, 0.8f); // Chậu
+    glColor3f(0.2f, 0.6f, 0.2f);
+    glPushMatrix();
+    glTranslatef(7.0f, 6.2f, -3.0f);
+    glutSolidSphere(0.3f, 12, 12); // Tán lá
+    glPopMatrix();
+}
 void drawPorchAndGarden() {
     drawCube(0.0f, 0.12f, 8.85f, 4.6f, 0.22f, 2.0f, 0.64f, 0.60f, 0.54f);
     drawCube(0.0f, 0.35f, 7.95f, 2.7f, 0.25f, 0.45f, 0.54f, 0.50f, 0.44f);
@@ -1112,61 +1145,68 @@ void drawFence() {
 void drawRain() {
     if (!isRaining) return;
 
-    glColor4f(0.6f, 0.7f, 0.9f, 0.6f);
+    glColor4f(0.7f, 0.8f, 0.9f, 0.8f); // Màu hạt mưa rõ hơn
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glLineWidth(1.0f);
+    glLineWidth(2.0f); // Hạt mưa to hơn
 
     glBegin(GL_LINES);
-    for (int i = 0; i < 200; i++) {
-        float x = (rand() % 400 - 200) / 10.0f;
-        float z = (rand() % 400 - 200) / 10.0f;
+    for (int i = 0; i < 600; i++) { // Tăng mật độ mưa lên 600 hạt
+        // Trải đều mưa ra không gian rộng hơn
+        float x = (rand() % 600 - 300) / 10.0f;
+        float z = (rand() % 600 - 300) / 10.0f;
         float y = 15.0f + (rand() % 100) / 10.0f;
-        float len = 0.5f + (rand() % 10) / 10.0f;
+        float len = 1.0f + (rand() % 15) / 10.0f; // Hạt mưa dài hơn
 
         glVertex3f(x, y, z);
-        glVertex3f(x - 0.2f, y - len, z);
+        glVertex3f(x - 0.3f, y - len, z); // Tạo độ nghiêng cho hạt mưa
     }
     glEnd();
     glDisable(GL_BLEND);
 }
 
-// ==================== HUD ====================
+// ==================== HUD TINH CHINH ====================
 void drawHUD() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluOrtho2D(0, 800, 0, 600);
+    gluOrtho2D(0, 800, 0, 600); // Kích thước quy chiếu UI
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
 
-    glColor4f(0.0f, 0.0f, 0.0f, 0.7f);
+    // Nền mờ góc trái, kéo dài từ trên xuống để chứa đủ tất cả text
+    glColor4f(0.0f, 0.05f, 0.1f, 0.75f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBegin(GL_QUADS);
     glVertex2f(0, 600);
-    glVertex2f(300, 600);
-    glVertex2f(300, 365);
-    glVertex2f(0, 365);
+    glVertex2f(320, 600);
+    glVertex2f(320, 100);
+    glVertex2f(0, 100);
     glEnd();
     glDisable(GL_BLEND);
 
-    glColor3f(1.0f, 1.0f, 1.0f);
-    int y = 580;
+    // Hàm in text
+    int y = 575;
     auto drawText = [&](const char* text) {
-        glRasterPos2f(10, y);
+        glRasterPos2f(15, y);
         for (const char* c = text; *c; c++) glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *c);
         y -= 18;
-    };
+        };
 
+    // Tiêu đề nổi bật
+    glColor3f(1.0f, 0.8f, 0.2f);
     drawText("=== DO AN DO HOA MAY TINH ===");
+
+    // Toàn bộ hướng dẫn phím tắt như ban đầu
+    glColor3f(1.0f, 1.0f, 1.0f);
     drawText("WASD: Di chuyen");
     drawText("Q/E: Len/Xuong");
     drawText("Chuot: Xoay nhin");
-    drawText("O: Mo/Dong cua");
+    drawText("O: Mo/Dong cua chinh");
     drawText("K: Mo/Dong cua so");
     drawText("1: Cua phong ngu");
     drawText("2: Cua ban cong");
@@ -1177,18 +1217,21 @@ void drawHUD() {
     drawText("T: TV ON/OFF");
     drawText("G: Tu lanh ON/OFF");
     drawText("L: Den ON/OFF");
-    drawText("M: Doi che do ve");
+    drawText("M: Doi che do ve (Solid/Wire/Point)");
     drawText("ESC: Thoat");
 
-    y -= 10;
-    glColor3f(0.3f, 1.0f, 0.3f);
-    drawText(fanOn ? "Quat: ON" : "Quat: OFF");
-    drawText(doorOpen ? "Cua: MO" : "Cua: DONG");
-    drawText(windowOpen ? "Cua so: MO" : "Cua so: DONG");
-    drawText(bedroomDoorOpen ? "Phong ngu: MO" : "Phong ngu: DONG");
-    drawText(balconyDoorOpen ? "Ban cong: MO" : "Ban cong: DONG");
-    drawText(lightOn ? "Den: ON" : "Den: OFF");
-    drawText(isRaining ? "Mua: DANG MUA" : "Mua: KHONG");
+    y -= 10; // Cách ra một khoảng
+
+    // Trạng thái hệ thống màu xanh cho dễ quan sát
+    glColor3f(0.5f, 1.0f, 0.5f);
+    drawText(fanOn ? "Quat      : ON" : "Quat      : OFF");
+    drawText(doorOpen ? "Cua chinh : MO" : "Cua chinh : DONG");
+    drawText(windowOpen ? "Cua so    : MO" : "Cua so    : DONG");
+    drawText(bedroomDoorOpen ? "Phong ngu : MO" : "Phong ngu : DONG");
+    drawText(balconyDoorOpen ? "Ban cong  : MO" : "Ban cong  : DONG");
+    drawText(lightOn ? "Den       : ON" : "Den       : OFF");
+    drawText(tvOn ? "TV        : ON" : "TV        : OFF");
+    drawText(isRaining ? "Thoi tiet : MUA" : "Thoi tiet : KHONG MUA");
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -1197,39 +1240,54 @@ void drawHUD() {
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 }
-
-// ==================== HAM KHOI TAO ====================
+// ==================== HAM KHOI TAO MOI ====================
 void init() {
-    glClearColor(0.6f, 0.75f, 0.9f, 1.0f);
+    // Màu bầu trời xanh nhạt tự nhiên hơn
+    glClearColor(0.85f, 0.92f, 0.98f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT0); // Sáng mặt trời
+    glEnable(GL_LIGHT1); // Đèn Spotlight
     glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    GLfloat ambientLight[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    // Kích hoạt khử răng cưa (Anti-aliasing) làm mịn góc cạnh
+    //glEnable(GL_MULTISAMPLE);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+
+    // Ánh sáng toàn cục ấm áp hơn
+    GLfloat global_ambient[] = { 0.35f, 0.35f, 0.38f, 1.0f };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+
+    // Setup nguồn sáng chính (Mặt trời chéo góc)
+    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.25f, 1.0f };
+    GLfloat diffuseLight[] = { 1.0f, 0.96f, 0.88f, 1.0f }; // Màu nắng vàng nhạt
+    GLfloat specularLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };  // Độ phản quang
+    GLfloat lightPosition[] = { 15.0f, 20.0f, 15.0f, 0.0f }; // Số 0.0f ở cuối biến nó thành ánh sáng định hướng
+
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-
-    GLfloat diffuseLight[] = {0.9f, 0.9f, 0.85f, 1.0f};
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-
-    GLfloat lightPosition[] = {5.0f, 8.0f, 5.0f, 1.0f};
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-    GLfloat spotDir[] = {0.0f, -1.0f, 0.0f};
-    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
-    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0f);
-    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2.0f);
-
     glEnable(GL_NORMALIZE);
-    glShadeModel(GL_SMOOTH);
-
+    glShadeModel(GL_SMOOTH); // Bật đổ bóng mượt
     srand(time(NULL));
 }
 
 // ==================== HAM VE SCENE ====================
 void renderScene() {
+    // Động lực học thời tiết: Đổi màu bầu trời khi mưa
+    if (isRaining) {
+        glClearColor(0.4f, 0.45f, 0.5f, 1.0f); // Trời xám xịt
+    }
+    else {
+        glClearColor(0.85f, 0.92f, 0.98f, 1.0f); // Trời trong xanh
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -1275,8 +1333,8 @@ void renderScene() {
     drawBathroom();
     drawToiletRoom();
 
-    drawRain();
-    drawHUD();
+    drawRain(); // Vẽ mưa
+    drawHUD();  // Vẽ UI
 
     glutSwapBuffers();
 }
@@ -1292,36 +1350,36 @@ void reshape(int w, int h) {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-        case 27: exit(0); break;
-        case 'w': case 'W': keys['w'] = true; break;
-        case 's': case 'S': keys['s'] = true; break;
-        case 'a': case 'A': keys['a'] = true; break;
-        case 'd': case 'D': keys['d'] = true; break;
-        case 'q': case 'Q': keys['q'] = true; break;
-        case 'e': case 'E': keys['e'] = true; break;
-        case 'o': case 'O': doorOpen = !doorOpen; break;
-        case 'k': case 'K': windowOpen = !windowOpen; break;
-        case '1': bedroomDoorOpen = !bedroomDoorOpen; break;
-        case '2': balconyDoorOpen = !balconyDoorOpen; break;
-        case '3': bathroomDoorOpen = !bathroomDoorOpen; break;
-        case '4': toiletDoorOpen = !toiletDoorOpen; break;
-        case 'f': case 'F': fanOn = !fanOn; break;
-        case 'l': case 'L': lightOn = !lightOn; break;
-        case 'r': case 'R': isRaining = !isRaining; break;
-        case 't': case 'T': tvOn = !tvOn; break;
-        case 'g': case 'G': fridgeOpen = !fridgeOpen; break;
-        case 'm': case 'M': renderMode = (renderMode + 1) % 3; break;
+    case 27: exit(0); break;
+    case 'w': case 'W': keys['w'] = true; break;
+    case 's': case 'S': keys['s'] = true; break;
+    case 'a': case 'A': keys['a'] = true; break;
+    case 'd': case 'D': keys['d'] = true; break;
+    case 'q': case 'Q': keys['q'] = true; break;
+    case 'e': case 'E': keys['e'] = true; break;
+    case 'o': case 'O': doorOpen = !doorOpen; break;
+    case 'k': case 'K': windowOpen = !windowOpen; break;
+    case '1': bedroomDoorOpen = !bedroomDoorOpen; break;
+    case '2': balconyDoorOpen = !balconyDoorOpen; break;
+    case '3': bathroomDoorOpen = !bathroomDoorOpen; break;
+    case '4': toiletDoorOpen = !toiletDoorOpen; break;
+    case 'f': case 'F': fanOn = !fanOn; break;
+    case 'l': case 'L': lightOn = !lightOn; break;
+    case 'r': case 'R': isRaining = !isRaining; break;
+    case 't': case 'T': tvOn = !tvOn; break;
+    case 'g': case 'G': fridgeOpen = !fridgeOpen; break;
+    case 'm': case 'M': renderMode = (renderMode + 1) % 3; break;
     }
 }
 
 void keyboardUp(unsigned char key, int x, int y) {
     switch (key) {
-        case 'w': case 'W': keys['w'] = false; break;
-        case 's': case 'S': keys['s'] = false; break;
-        case 'a': case 'A': keys['a'] = false; break;
-        case 'd': case 'D': keys['d'] = false; break;
-        case 'q': case 'Q': keys['q'] = false; break;
-        case 'e': case 'E': keys['e'] = false; break;
+    case 'w': case 'W': keys['w'] = false; break;
+    case 's': case 'S': keys['s'] = false; break;
+    case 'a': case 'A': keys['a'] = false; break;
+    case 'd': case 'D': keys['d'] = false; break;
+    case 'q': case 'Q': keys['q'] = false; break;
+    case 'e': case 'E': keys['e'] = false; break;
     }
 }
 
@@ -1373,9 +1431,11 @@ void update(int value) {
             if (t < 0.0f) t = 0.0f;
             if (t > 1.0f) t = 1.0f;
             targetY = 2.2f + t * 5.1f;
-        } else if (camY > 5.4f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 10.2f) {
+        }
+        else if (camY > 5.4f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 10.2f) {
             targetY = 7.25f;
-        } else if (camY < 5.2f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 8.8f) {
+        }
+        else if (camY < 5.2f && camX > -7.6f && camX < 7.6f && camZ > -7.6f && camZ < 8.8f) {
             targetY = 2.35f;
         }
         camY += (targetY - camY) * 0.12f;
@@ -1391,6 +1451,7 @@ void update(int value) {
 // ==================== MAIN ====================
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
+    // Lưu ý: GLUT_MULTISAMPLE giúp khử răng cưa
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowSize(1200, 800);
     glutInitWindowPosition(100, 50);

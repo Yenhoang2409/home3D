@@ -32,6 +32,16 @@ bool doorOpen = false;
 float windowAngle = 0.0f;
 bool windowOpen = false;
 
+// Cua tang 2
+float bedroomDoorAngle = 0.0f;
+bool bedroomDoorOpen = false;
+float balconyDoorAngle = 0.0f;
+bool balconyDoorOpen = false;
+float bathroomDoorAngle = 0.0f;
+bool bathroomDoorOpen = false;
+float toiletDoorAngle = 0.0f;
+bool toiletDoorOpen = false;
+
 // Den
 bool lightOn = true;
 bool spotLightOn = true;
@@ -332,24 +342,132 @@ void drawCube(float x, float y, float z, float w, float h, float d,
     glPopMatrix();
 }
 
-// ==================== NEN GACH CHECKERBOARD MAU NAU ====================
+void drawGlassCube(float x, float y, float z, float w, float h, float d,
+                   float r, float g, float b, float a = 0.45f) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(r, g, b, a);
+    setMaterial(r, g, b, 80.0f);
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glScalef(w, h, d);
+    glutSolidCube(1.0);
+    glPopMatrix();
+    glDisable(GL_BLEND);
+}
+
+void drawCylinder(float x, float y, float z, float radius, float height,
+                  float r, float g, float b, int slices = 24) {
+    glColor3f(r, g, b);
+    setMaterial(r, g, b, 40.0f);
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glRotatef(-90, 1.0f, 0.0f, 0.0f);
+    GLUquadric* cyl = gluNewQuadric();
+    gluCylinder(cyl, radius, radius, height, slices, 12);
+    gluDisk(cyl, 0.0, radius, slices, 1);
+    glTranslatef(0.0f, 0.0f, height);
+    gluDisk(cyl, 0.0, radius, slices, 1);
+    gluDeleteQuadric(cyl);
+    glPopMatrix();
+}
+
+void drawDoorLeaf(float hingeX, float hingeY, float hingeZ, float width, float height,
+                  float angle, bool glass, float r, float g, float b) {
+    glPushMatrix();
+    glTranslatef(hingeX, hingeY, hingeZ);
+    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glTranslatef(width / 2.0f, height / 2.0f, 0.0f);
+    if (glass) {
+        drawGlassCube(0.0f, 0.0f, 0.0f, width, height, 0.08f, 0.55f, 0.78f, 0.95f, 0.42f);
+        drawCube(0.0f, 0.0f, 0.045f, width, 0.08f, 0.04f, r, g, b);
+        drawCube(0.0f, height * 0.25f, 0.045f, width, 0.06f, 0.04f, r, g, b);
+        drawCube(0.0f, -height * 0.25f, 0.045f, width, 0.06f, 0.04f, r, g, b);
+        drawCube(-width * 0.35f, 0.0f, 0.045f, 0.06f, height, 0.04f, r, g, b);
+        drawCube(width * 0.35f, 0.0f, 0.045f, 0.06f, height, 0.04f, r, g, b);
+    } else {
+        drawCube(0.0f, 0.0f, 0.0f, width, height, 0.10f, r, g, b);
+        drawCube(0.0f, height * 0.24f, 0.06f, width * 0.72f, height * 0.22f, 0.04f, r * 0.75f, g * 0.75f, b * 0.75f);
+        drawCube(0.0f, -height * 0.18f, 0.06f, width * 0.72f, height * 0.34f, 0.04f, r * 0.75f, g * 0.75f, b * 0.75f);
+    }
+    glColor3f(0.92f, 0.78f, 0.35f);
+    glPushMatrix();
+    glTranslatef(width * 0.33f, 0.0f, 0.09f);
+    glutSolidSphere(0.07f, 12, 12);
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void drawDoorFrame(float x, float y, float z, float width, float height,
+                   float r = 0.36f, float g = 0.22f, float b = 0.13f) {
+    drawCube(x, y + height, z, width + 0.18f, 0.12f, 0.18f, r, g, b);
+    drawCube(x - width / 2.0f, y + height / 2.0f, z, 0.12f, height, 0.18f, r, g, b);
+    drawCube(x + width / 2.0f, y + height / 2.0f, z, 0.12f, height, 0.18f, r, g, b);
+}
+
+void drawPitchedRoof() {
+    glColor3f(0.34f, 0.12f, 0.08f);
+    setMaterial(0.34f, 0.12f, 0.08f, 28.0f);
+    glBegin(GL_TRIANGLES);
+    glNormal3f(0.0f, 0.6f, 0.8f);
+    glVertex3f(-8.8f, 10.0f, 8.7f);
+    glVertex3f(8.8f, 10.0f, 8.7f);
+    glVertex3f(0.0f, 12.1f, 8.7f);
+
+    glNormal3f(0.0f, 0.6f, -0.8f);
+    glVertex3f(8.8f, 10.0f, -8.7f);
+    glVertex3f(-8.8f, 10.0f, -8.7f);
+    glVertex3f(0.0f, 12.1f, -8.7f);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glNormal3f(0.0f, 0.8f, 0.5f);
+    glVertex3f(-8.8f, 10.0f, 8.7f);
+    glVertex3f(0.0f, 12.1f, 8.7f);
+    glVertex3f(0.0f, 12.1f, -8.7f);
+    glVertex3f(-8.8f, 10.0f, -8.7f);
+
+    glNormal3f(0.0f, 0.8f, -0.5f);
+    glVertex3f(8.8f, 10.0f, 8.7f);
+    glVertex3f(8.8f, 10.0f, -8.7f);
+    glVertex3f(0.0f, 12.1f, -8.7f);
+    glVertex3f(0.0f, 12.1f, 8.7f);
+    glEnd();
+
+    for (int i = -7; i <= 7; i += 2) {
+        drawCube((float)i, 10.12f, 8.95f, 0.12f, 0.18f, 0.25f, 0.18f, 0.08f, 0.06f);
+        drawCube((float)i, 10.12f, -8.95f, 0.12f, 0.18f, 0.25f, 0.18f, 0.08f, 0.06f);
+    }
+}
+
+// ==================== NEN GACH VA SAN GO ====================
 void drawFloor() {
-    // Nen gach checkerboard mau nau
     for (int i = -8; i < 8; i++) {
         for (int j = -8; j < 8; j++) {
-            // Mau nau nhat va nau dam xen ke
-            float c1 = 0.55f, c2 = 0.40f; // Mau nau nhat va dam
-            float r = ((i + j) % 2 == 0) ? c1 : c2;
-            float g = ((i + j) % 2 == 0) ? 0.40f : 0.28f;
-            float b = ((i + j) % 2 == 0) ? 0.28f : 0.18f;
+            bool livingArea = j > -1;
+            bool lightTile = ((i + j) % 2 == 0);
+            float r = livingArea ? (lightTile ? 0.70f : 0.58f) : (lightTile ? 0.86f : 0.78f);
+            float g = livingArea ? (lightTile ? 0.48f : 0.36f) : (lightTile ? 0.82f : 0.74f);
+            float b = livingArea ? (lightTile ? 0.30f : 0.22f) : (lightTile ? 0.72f : 0.66f);
 
             drawCube(i * 1.0f + 0.5f, 0.02f, j * 1.0f + 0.5f, 
                      1.0f, 0.04f, 1.0f, r, g, b);
         }
     }
 
-    // Vien gach mau nau dam
-    glColor3f(0.35f, 0.25f, 0.15f);
+    for (int i = -8; i < 8; i++) {
+        for (int j = -8; j < 8; j++) {
+            bool bedroom = i < 2;
+            bool lightTile = ((i + j) % 2 == 0);
+            float r = bedroom ? (lightTile ? 0.66f : 0.52f) : (lightTile ? 0.88f : 0.80f);
+            float g = bedroom ? (lightTile ? 0.43f : 0.33f) : (lightTile ? 0.86f : 0.78f);
+            float b = bedroom ? (lightTile ? 0.25f : 0.18f) : (lightTile ? 0.80f : 0.72f);
+            drawCube(i * 1.0f + 0.5f, 5.42f, j * 1.0f + 0.5f,
+                     1.0f, 0.04f, 1.0f, r, g, b);
+        }
+    }
+
+    glColor3f(0.36f, 0.28f, 0.20f);
     glLineWidth(1.5f);
     for (int i = -8; i <= 8; i++) {
         glBegin(GL_LINES);
@@ -359,23 +477,49 @@ void drawFloor() {
         glVertex3f(8.0f, 0.05f, i);
         glEnd();
     }
+
+    glColor3f(0.42f, 0.30f, 0.18f);
+    for (int i = -8; i <= 8; i++) {
+        glBegin(GL_LINES);
+        glVertex3f(i, 5.47f, -8.0f);
+        glVertex3f(i, 5.47f, 8.0f);
+        glVertex3f(-8.0f, 5.47f, i);
+        glVertex3f(8.0f, 5.47f, i);
+        glEnd();
+    }
 }
 
-// ==================== TUONG MAU TRANG ====================
+// ==================== TUONG, VACH PHONG VA MAT TIEN ====================
 void drawWalls() {
-    // Tuong chinh - MAU TRANG
-    drawCube(0.0f, 2.5f, -7.4f, 16.0f, 5.0f, 0.2f, 1.0f, 1.0f, 1.0f);
-    drawCube(-7.4f, 2.5f, 0.0f, 0.2f, 5.0f, 15.0f, 1.0f, 1.0f, 1.0f);
-    drawCube(7.4f, 2.5f, 0.0f, 0.2f, 5.0f, 15.0f, 1.0f, 1.0f, 1.0f);
+    float wallR = 0.94f, wallG = 0.91f, wallB = 0.84f;
+    drawCube(0.0f, 2.5f, -7.55f, 16.2f, 5.0f, 0.25f, wallR, wallG, wallB);
+    drawCube(-7.55f, 2.5f, 0.0f, 0.25f, 5.0f, 15.2f, wallR, wallG, wallB);
+    drawCube(7.55f, 2.5f, 0.0f, 0.25f, 5.0f, 15.2f, wallR, wallG, wallB);
 
-    // Vien tuong mau nau
-    drawCube(0.0f, 5.1f, -7.4f, 16.2f, 0.2f, 0.3f, 0.6f, 0.45f, 0.3f);
-    drawCube(0.0f, 0.0f, -7.4f, 16.2f, 0.2f, 0.3f, 0.6f, 0.45f, 0.3f);
+    drawCube(-3.7f, 2.5f, 7.55f, 7.4f, 5.0f, 0.25f, wallR, wallG, wallB);
+    drawCube(5.0f, 2.5f, 7.55f, 6.0f, 5.0f, 0.25f, wallR, wallG, wallB);
+    drawCube(0.6f, 4.4f, 7.55f, 2.0f, 1.2f, 0.25f, wallR, wallG, wallB);
 
-    // Tran nha
-    drawCube(0.0f, 5.2f, 0.0f, 16.0f, 0.2f, 15.0f, 1.0f, 0.98f, 0.95f);
+    drawCube(0.0f, 5.2f, 0.0f, 16.2f, 0.22f, 15.2f, 0.88f, 0.82f, 0.72f);
 
-    // Den tran trang tri
+    drawCube(0.0f, 7.7f, -7.55f, 16.2f, 4.6f, 0.25f, wallR, wallG, wallB);
+    drawCube(-7.55f, 7.7f, 0.0f, 0.25f, 4.6f, 15.2f, wallR, wallG, wallB);
+    drawCube(7.55f, 7.7f, 0.0f, 0.25f, 4.6f, 15.2f, wallR, wallG, wallB);
+    drawCube(0.0f, 7.7f, 7.55f, 16.2f, 4.6f, 0.25f, wallR, wallG, wallB);
+
+    drawCube(2.0f, 7.65f, 0.0f, 0.18f, 4.2f, 15.0f, 0.90f, 0.88f, 0.82f);
+    drawCube(4.8f, 7.65f, -1.5f, 5.5f, 4.2f, 0.18f, 0.90f, 0.88f, 0.82f);
+    drawCube(4.8f, 7.65f, 2.7f, 5.5f, 4.2f, 0.18f, 0.90f, 0.88f, 0.82f);
+    drawCube(5.9f, 7.65f, 0.6f, 0.16f, 4.2f, 4.1f, 0.88f, 0.86f, 0.80f);
+
+    drawCube(0.0f, 10.05f, 0.0f, 16.2f, 0.18f, 15.2f, 0.95f, 0.92f, 0.86f);
+
+    drawCube(0.0f, 5.1f, -7.7f, 16.6f, 0.22f, 0.35f, 0.46f, 0.30f, 0.18f);
+    drawCube(0.0f, 0.05f, -7.7f, 16.6f, 0.12f, 0.35f, 0.46f, 0.30f, 0.18f);
+    drawCube(0.0f, 10.0f, 7.8f, 16.6f, 0.18f, 0.35f, 0.46f, 0.30f, 0.18f);
+
+    drawPitchedRoof();
+
     glColor3f(1.0f, 0.9f, 0.7f);
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -385,12 +529,17 @@ void drawWalls() {
             glPopMatrix();
         }
     }
+
+    drawGlassCube(-4.5f, 8.0f, 7.72f, 2.6f, 2.0f, 0.05f, 0.55f, 0.78f, 0.95f, 0.42f);
+    drawGlassCube(4.4f, 8.0f, 7.72f, 2.2f, 2.0f, 0.05f, 0.55f, 0.78f, 0.95f, 0.42f);
+    drawCube(-4.5f, 8.0f, 7.78f, 2.8f, 2.15f, 0.08f, 0.35f, 0.22f, 0.13f);
+    drawCube(4.4f, 8.0f, 7.78f, 2.4f, 2.15f, 0.08f, 0.35f, 0.22f, 0.13f);
 }
 
 // ==================== CUA CAO BANG TUONG, TRONG SUOT KHI MO ====================
 void drawDoor() {
     // Cua ben trai tuong - CAO BANG TUONG (tu nen den tran)
-    float doorX = -6.0f;
+    float doorX = 0.6f;
     float doorZ = 7.4f;
     float doorHeight = 5.0f;  // CAO BANG TUONG
     float doorWidth = 2.0f;
@@ -590,16 +739,25 @@ void drawTV() {
 }
 
 void drawFridge() {
-    // Tu lanh
-    drawCube(5.5f, 1.5f, -5.0f, 1.2f, 3.0f, 1.2f, 0.85f, 0.9f, 0.95f);
+    drawCube(5.4f, 1.55f, -5.2f, 1.55f, 3.1f, 1.25f, 0.78f, 0.82f, 0.86f);
+    drawCube(5.4f, 3.15f, -4.55f, 1.45f, 0.08f, 0.06f, 0.45f, 0.48f, 0.52f);
+    drawCube(5.4f, 1.55f, -4.55f, 1.45f, 0.08f, 0.06f, 0.45f, 0.48f, 0.52f);
+    drawCube(4.63f, 1.55f, -4.55f, 0.06f, 3.0f, 0.06f, 0.48f, 0.50f, 0.54f);
+    drawCube(6.17f, 1.55f, -4.55f, 0.06f, 3.0f, 0.06f, 0.48f, 0.50f, 0.54f);
+    drawCube(5.4f, 2.55f, -4.50f, 1.35f, 0.04f, 0.04f, 0.30f, 0.32f, 0.35f);
+    drawCube(5.95f, 2.0f, -4.46f, 0.08f, 1.1f, 0.08f, 0.18f, 0.20f, 0.22f);
+    drawCube(5.95f, 3.2f, -4.46f, 0.08f, 0.65f, 0.08f, 0.18f, 0.20f, 0.22f);
+    drawCube(4.9f, 2.1f, -4.44f, 0.42f, 0.34f, 0.04f, 0.12f, 0.15f, 0.18f);
+    drawCube(5.4f, 0.05f, -5.2f, 1.3f, 0.1f, 1.0f, 0.28f, 0.28f, 0.30f);
 
-    // Canh tu lanh mo
     glPushMatrix();
     glTranslatef(5.5f + 0.6f, 1.5f, -5.0f + 0.6f);
     glRotatef(fridgeDoorAngle, 0.0f, 1.0f, 0.0f);
     glTranslatef(-0.6f, 0.0f, -0.6f);
 
-    drawCube(0.0f, 0.0f, 0.0f, 1.15f, 2.9f, 0.1f, 0.8f, 0.85f, 0.9f);
+    drawCube(0.0f, 0.0f, 0.0f, 1.18f, 2.85f, 0.1f, 0.82f, 0.86f, 0.90f);
+    drawCube(0.0f, 0.65f, 0.08f, 0.95f, 0.06f, 0.05f, 0.70f, 0.74f, 0.78f);
+    drawCube(0.0f, -0.45f, 0.08f, 0.95f, 0.06f, 0.05f, 0.70f, 0.74f, 0.78f);
 
     glColor3f(0.7f, 0.7f, 0.7f);
     glPushMatrix();
@@ -642,6 +800,175 @@ void drawLamp() {
     gluCylinder(cone, 0.25, 0.1, 0.3, 16, 16);
     gluDeleteQuadric(cone);
     glPopMatrix();
+}
+
+void drawRugAndDecor() {
+    drawCube(-4.0f, 0.08f, 4.4f, 3.4f, 0.035f, 2.2f, 0.58f, 0.16f, 0.16f);
+    drawCube(-4.0f, 0.11f, 4.4f, 3.0f, 0.02f, 1.8f, 0.82f, 0.68f, 0.45f);
+    drawCube(-5.4f, 1.45f, 2.95f, 0.35f, 0.35f, 0.35f, 0.85f, 0.82f, 0.72f);
+    drawCube(-4.1f, 1.45f, 2.95f, 0.35f, 0.35f, 0.35f, 0.92f, 0.88f, 0.76f);
+    drawCube(0.0f, 2.6f, -7.22f, 2.6f, 1.3f, 0.08f, 0.14f, 0.12f, 0.10f);
+    drawCube(0.0f, 2.6f, -7.16f, 2.3f, 1.0f, 0.04f, 0.70f, 0.48f, 0.28f);
+    drawCylinder(-6.6f, 0.05f, 5.6f, 0.32f, 0.35f, 0.55f, 0.30f, 0.18f);
+    glColor3f(0.12f, 0.48f, 0.22f);
+    glPushMatrix();
+    glTranslatef(-6.6f, 0.75f, 5.6f);
+    glutSolidSphere(0.45f, 14, 14);
+    glPopMatrix();
+}
+
+void drawKitchen() {
+    drawCube(6.7f, 0.45f, -2.0f, 1.1f, 0.9f, 3.2f, 0.48f, 0.32f, 0.20f);
+    drawCube(6.65f, 1.0f, -2.0f, 1.2f, 0.12f, 3.35f, 0.20f, 0.20f, 0.18f);
+    drawCube(6.08f, 1.08f, -2.0f, 0.05f, 0.04f, 1.1f, 0.72f, 0.72f, 0.70f);
+    drawCylinder(6.08f, 1.12f, -2.0f, 0.18f, 0.05f, 0.65f, 0.68f, 0.70f);
+    drawCube(6.8f, 2.55f, -2.0f, 0.85f, 1.0f, 2.8f, 0.55f, 0.36f, 0.22f);
+    for (int i = 0; i < 3; i++) {
+        drawCube(6.04f, 0.45f, -3.0f + i, 0.04f, 0.08f, 0.45f, 0.88f, 0.80f, 0.62f);
+        drawCube(6.35f, 2.55f, -3.0f + i, 0.04f, 0.08f, 0.42f, 0.88f, 0.80f, 0.62f);
+    }
+}
+
+void drawStairs() {
+    drawCube(-6.2f, 5.45f, 0.0f, 2.5f, 0.16f, 4.5f, 0.62f, 0.48f, 0.32f);
+    drawCube(-3.0f, 5.48f, -0.25f, 8.8f, 0.12f, 1.65f, 0.68f, 0.55f, 0.38f);
+    drawCube(3.8f, 5.49f, -0.25f, 6.5f, 0.12f, 1.65f, 0.68f, 0.55f, 0.38f);
+
+    for (int i = 0; i < 16; i++) {
+        float y = 0.18f + i * 0.33f;
+        float z = -6.35f + i * 0.40f;
+        float treadDepth = 0.46f;
+        drawCube(-6.2f, y, z, 2.15f, 0.16f, treadDepth, 0.66f, 0.46f, 0.28f);
+        drawCube(-6.2f, y - 0.10f, z - 0.21f, 2.15f, 0.20f, 0.05f, 0.42f, 0.28f, 0.18f);
+    }
+
+    drawCube(-7.4f, 2.7f, -3.2f, 0.10f, 4.9f, 6.0f, 0.14f, 0.11f, 0.09f);
+    drawCube(-5.0f, 2.7f, -3.2f, 0.10f, 4.9f, 6.0f, 0.14f, 0.11f, 0.09f);
+    drawCube(-6.2f, 5.05f, -0.1f, 2.6f, 0.10f, 0.10f, 0.12f, 0.10f, 0.08f);
+    for (int i = 0; i < 9; i++) {
+        float z = -6.2f + i * 0.72f;
+        float y = 0.75f + i * 0.52f;
+        drawCylinder(-7.4f, y, z, 0.035f, 0.85f, 0.16f, 0.13f, 0.10f);
+        drawCylinder(-5.0f, y, z, 0.035f, 0.85f, 0.16f, 0.13f, 0.10f);
+    }
+}
+
+void drawUpperHallAndDoors() {
+    drawCube(-0.1f, 5.55f, -0.25f, 12.4f, 0.08f, 1.3f, 0.80f, 0.67f, 0.48f);
+    drawCube(-0.1f, 5.60f, -0.25f, 11.6f, 0.035f, 0.9f, 0.72f, 0.28f, 0.22f);
+    drawCube(-0.1f, 7.75f, 0.50f, 12.0f, 0.10f, 0.12f, 0.34f, 0.22f, 0.14f);
+    for (int i = -5; i <= 5; i++) {
+        drawCylinder((float)i, 5.7f, 0.50f, 0.035f, 1.7f, 0.20f, 0.16f, 0.12f);
+    }
+
+    drawDoorFrame(-0.35f, 5.5f, 0.68f, 1.45f, 2.25f);
+    drawDoorLeaf(-1.08f, 5.5f, 0.78f, 1.38f, 2.18f, bedroomDoorAngle, false, 0.58f, 0.36f, 0.22f);
+
+    drawDoorFrame(3.2f, 5.5f, -1.62f, 1.25f, 2.1f);
+    drawDoorLeaf(2.58f, 5.5f, -1.50f, 1.18f, 2.02f, bathroomDoorAngle, false, 0.70f, 0.62f, 0.50f);
+
+    drawDoorFrame(5.2f, 5.5f, 2.58f, 1.10f, 2.0f);
+    drawDoorLeaf(4.65f, 5.5f, 2.70f, 1.04f, 1.92f, toiletDoorAngle, false, 0.68f, 0.60f, 0.50f);
+}
+
+void drawBedroom() {
+    drawCube(-3.8f, 5.75f, 2.0f, 4.3f, 0.45f, 3.0f, 0.42f, 0.28f, 0.18f);
+    drawCube(-3.8f, 6.05f, 2.0f, 4.0f, 0.35f, 2.75f, 0.92f, 0.88f, 0.78f);
+    drawCube(-3.8f, 6.35f, 2.0f, 4.1f, 0.20f, 2.85f, 0.36f, 0.52f, 0.70f);
+    drawCube(-5.4f, 6.65f, 0.75f, 0.75f, 0.22f, 0.48f, 0.96f, 0.94f, 0.86f);
+    drawCube(-4.25f, 6.65f, 0.75f, 0.75f, 0.22f, 0.48f, 0.96f, 0.94f, 0.86f);
+    drawCube(-3.8f, 6.85f, 3.45f, 4.4f, 1.45f, 0.35f, 0.50f, 0.32f, 0.20f);
+
+    drawCube(-6.45f, 6.0f, 1.0f, 0.9f, 0.6f, 0.8f, 0.46f, 0.30f, 0.20f);
+    drawCube(-6.45f, 6.45f, 1.0f, 0.55f, 0.65f, 0.55f, 0.92f, 0.80f, 0.52f);
+    drawCylinder(-6.45f, 6.2f, 1.0f, 0.05f, 0.45f, 0.72f, 0.62f, 0.42f);
+    drawCube(-1.15f, 6.0f, 1.0f, 0.9f, 0.6f, 0.8f, 0.46f, 0.30f, 0.20f);
+    drawCube(-1.15f, 6.45f, 1.0f, 0.55f, 0.65f, 0.55f, 0.92f, 0.80f, 0.52f);
+    drawCylinder(-1.15f, 6.2f, 1.0f, 0.05f, 0.45f, 0.72f, 0.62f, 0.42f);
+
+    drawCube(-6.25f, 7.45f, -4.8f, 1.6f, 3.5f, 0.65f, 0.42f, 0.27f, 0.17f);
+    drawCube(-4.55f, 7.45f, -4.8f, 1.6f, 3.5f, 0.65f, 0.46f, 0.30f, 0.19f);
+    drawCube(-5.4f, 7.45f, -4.42f, 0.05f, 3.25f, 0.05f, 0.22f, 0.15f, 0.10f);
+    drawCube(-6.0f, 7.55f, -4.38f, 0.06f, 0.42f, 0.05f, 0.90f, 0.78f, 0.42f);
+    drawCube(-4.8f, 7.55f, -4.38f, 0.06f, 0.42f, 0.05f, 0.90f, 0.78f, 0.42f);
+
+    drawCube(-0.35f, 6.0f, -5.3f, 2.1f, 0.18f, 0.9f, 0.52f, 0.34f, 0.22f);
+    drawCube(-1.2f, 5.75f, -5.6f, 0.12f, 0.7f, 0.12f, 0.34f, 0.24f, 0.18f);
+    drawCube(0.5f, 5.75f, -5.6f, 0.12f, 0.7f, 0.12f, 0.34f, 0.24f, 0.18f);
+    drawCube(-0.35f, 6.25f, -5.75f, 1.1f, 0.8f, 0.10f, 0.30f, 0.26f, 0.24f);
+    drawCube(-0.35f, 6.75f, -5.0f, 0.42f, 0.7f, 0.34f, 0.50f, 0.34f, 0.24f);
+
+    drawCube(-6.6f, 8.8f, 6.5f, 0.55f, 0.30f, 0.18f, 0.80f, 0.82f, 0.84f);
+    drawCube(-6.6f, 8.6f, 6.5f, 1.3f, 0.10f, 0.10f, 0.80f, 0.82f, 0.84f);
+    drawCube(-6.05f, 8.35f, 6.5f, 0.10f, 0.65f, 0.10f, 0.80f, 0.82f, 0.84f);
+
+    drawGlassCube(-4.2f, 7.8f, 7.88f, 2.8f, 2.0f, 0.06f, 0.55f, 0.78f, 0.95f, 0.42f);
+    drawCube(-4.2f, 7.8f, 8.18f, 4.4f, 1.0f, 0.18f, 0.48f, 0.30f, 0.18f);
+    drawCube(-6.4f, 7.2f, 8.65f, 0.14f, 1.2f, 1.0f, 0.30f, 0.25f, 0.20f);
+    drawCube(-2.0f, 7.2f, 8.65f, 0.14f, 1.2f, 1.0f, 0.30f, 0.25f, 0.20f);
+    drawCube(-4.2f, 6.85f, 9.15f, 4.5f, 0.16f, 0.14f, 0.30f, 0.25f, 0.20f);
+}
+
+void drawBathroom() {
+    drawCube(3.15f, 5.62f, -5.4f, 2.1f, 0.18f, 1.25f, 0.95f, 0.95f, 0.92f);
+    drawCube(3.15f, 5.85f, -5.4f, 1.75f, 0.26f, 0.95f, 0.78f, 0.88f, 0.94f);
+    drawCylinder(2.2f, 6.15f, -4.85f, 0.05f, 1.55f, 0.72f, 0.74f, 0.76f);
+    drawCylinder(2.2f, 7.65f, -4.85f, 0.25f, 0.06f, 0.72f, 0.74f, 0.76f);
+    for (int i = 0; i < 5; i++) {
+        drawCylinder(2.05f + i * 0.08f, 7.48f, -4.85f, 0.012f, 0.25f, 0.45f, 0.65f, 0.90f, 8);
+    }
+
+    drawCylinder(5.55f, 5.62f, -5.45f, 0.45f, 0.18f, 0.96f, 0.96f, 0.94f);
+    drawCylinder(5.55f, 5.8f, -5.45f, 0.34f, 0.10f, 0.74f, 0.86f, 0.92f);
+    drawCylinder(5.55f, 5.9f, -5.45f, 0.04f, 0.24f, 0.70f, 0.72f, 0.74f);
+    drawGlassCube(5.55f, 7.05f, -7.35f, 1.1f, 1.1f, 0.04f, 0.78f, 0.90f, 0.96f, 0.55f);
+    drawCube(5.55f, 6.05f, -7.30f, 0.62f, 0.12f, 0.08f, 0.90f, 0.88f, 0.82f);
+    drawCylinder(4.45f, 5.58f, -7.0f, 0.08f, 0.55f, 0.96f, 0.96f, 0.90f);
+    drawCylinder(4.75f, 5.58f, -7.0f, 0.08f, 0.42f, 0.30f, 0.45f, 0.75f);
+    drawCylinder(5.05f, 5.58f, -7.0f, 0.08f, 0.35f, 0.86f, 0.30f, 0.34f);
+}
+
+void drawToiletRoom() {
+    drawCylinder(4.7f, 5.62f, 1.05f, 0.38f, 0.28f, 0.95f, 0.95f, 0.92f);
+    drawCube(4.7f, 5.95f, 0.70f, 0.75f, 0.45f, 0.25f, 0.94f, 0.94f, 0.90f);
+    drawCylinder(4.7f, 5.9f, 1.05f, 0.30f, 0.08f, 0.70f, 0.85f, 0.92f);
+    drawCube(4.7f, 6.55f, 0.42f, 0.9f, 0.75f, 0.18f, 0.95f, 0.95f, 0.92f);
+    drawCube(3.35f, 6.35f, 2.45f, 0.28f, 0.28f, 0.18f, 0.86f, 0.86f, 0.80f);
+    drawCube(3.36f, 6.30f, 2.72f, 0.06f, 0.06f, 0.55f, 0.80f, 0.80f, 0.76f);
+    drawCube(5.6f, 6.75f, 2.55f, 0.75f, 0.08f, 0.12f, 0.76f, 0.76f, 0.72f);
+    drawCube(5.6f, 6.45f, 2.58f, 0.56f, 0.46f, 0.05f, 0.88f, 0.88f, 0.84f);
+}
+
+void drawPorchAndGarden() {
+    drawCube(0.0f, 0.12f, 8.85f, 4.6f, 0.22f, 2.0f, 0.64f, 0.60f, 0.54f);
+    drawCube(0.0f, 0.35f, 7.95f, 2.7f, 0.25f, 0.45f, 0.54f, 0.50f, 0.44f);
+    drawCylinder(-2.0f, 0.22f, 8.15f, 0.13f, 3.5f, 0.78f, 0.72f, 0.62f);
+    drawCylinder(2.0f, 0.22f, 8.15f, 0.13f, 3.5f, 0.78f, 0.72f, 0.62f);
+    drawCube(0.0f, 3.65f, 8.15f, 4.8f, 0.25f, 1.35f, 0.42f, 0.26f, 0.16f);
+
+    for (int i = 0; i < 7; i++) {
+        float z = 10.5f + i * 2.0f;
+        drawCube(-0.8f, 0.03f, z, 1.1f, 0.05f, 0.85f, 0.62f, 0.62f, 0.58f);
+        drawCube(0.8f, 0.03f, z, 1.1f, 0.05f, 0.85f, 0.62f, 0.62f, 0.58f);
+    }
+
+    for (int side = -1; side <= 1; side += 2) {
+        for (int i = 0; i < 7; i++) {
+            float x = side * (2.8f + i * 0.45f);
+            float z = 9.2f + i * 0.55f;
+            drawCylinder(x, 0.03f, z, 0.18f, 0.22f, 0.36f, 0.22f, 0.12f, 12);
+            glColor3f(0.18f, 0.48f, 0.18f);
+            glPushMatrix();
+            glTranslatef(x, 0.36f, z);
+            glutSolidSphere(0.32f, 10, 10);
+            glPopMatrix();
+            glColor3f(0.95f, 0.38f + 0.08f * i, 0.42f);
+            glPushMatrix();
+            glTranslatef(x + 0.12f, 0.55f, z);
+            glutSolidSphere(0.08f, 8, 8);
+            glPopMatrix();
+        }
+    }
 }
 
 // ==================== NGOAI CANH ====================
@@ -785,7 +1112,7 @@ void drawHUD() {
     drawText("Q/E: Len/Xuong");
     drawText("Chuot: Xoay nhin");
     drawText("O: Mo/Dong cua");
-    drawText("W: Mo/Dong cua so");
+    drawText("K: Mo/Dong cua so");
     drawText("F: Quat ON/OFF");
     drawText("R: Mua ON/OFF");
     drawText("T: TV ON/OFF");
@@ -865,6 +1192,7 @@ void renderScene() {
     drawTree(10.0f, 8.0f, 1.1f);
     drawTree(-15.0f, 0.0f, 1.3f);
     drawTree(15.0f, 0.0f, 1.0f);
+    drawPorchAndGarden();
 
     drawFloor();
     drawWalls();
@@ -878,6 +1206,12 @@ void renderScene() {
     drawFridge();
     drawDiningTable();
     drawLamp();
+    drawRugAndDecor();
+    drawKitchen();
+    drawStairs();
+    drawBedroom();
+    drawBathroom();
+    drawToiletRoom();
 
     drawRain();
     drawHUD();
@@ -904,6 +1238,7 @@ void keyboard(unsigned char key, int x, int y) {
         case 'q': case 'Q': keys['q'] = true; break;
         case 'e': case 'E': keys['e'] = true; break;
         case 'o': case 'O': doorOpen = !doorOpen; break;
+        case 'k': case 'K': windowOpen = !windowOpen; break;
         case 'f': case 'F': fanOn = !fanOn; break;
         case 'l': case 'L': lightOn = !lightOn; break;
         case 'r': case 'R': isRaining = !isRaining; break;
@@ -988,7 +1323,7 @@ int main(int argc, char** argv) {
     cout << "Nha 3D sang trong voi day du thuat toan do hoa" << endl;
     cout << "Phim dieu khien:" << endl;
     cout << "  WASD: Di chuyen | Q/E: Len/Xuong" << endl;
-    cout << "  Chuot: Xoay nhin | O: Cua | W: Cua so" << endl;
+    cout << "  Chuot: Xoay nhin | O: Cua | K: Cua so" << endl;
     cout << "  F: Quat | R: Mua | T: TV | G: Tu lanh" << endl;
     cout << "  L: Den | M: Che do ve | ESC: Thoat" << endl;
 

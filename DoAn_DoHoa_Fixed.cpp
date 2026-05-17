@@ -1,4 +1,4 @@
-﻿#define NOMINMAX // Phải đặt trước windows.h để chặn xung đột hàm max()
+#define NOMINMAX // Phải đặt trước windows.h để chặn xung đột hàm max()
 #include <windows.h>
 #include <GL/glut.h>
 #include <GL/glu.h>

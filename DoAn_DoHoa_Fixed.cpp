@@ -18,7 +18,7 @@ using namespace std;
 extern void drawKitchenInterior();
 extern void drawLivingRoomInterior();
 // ==================== BIẾN TOÀN CỤC & CAMERA ====================
-GLuint texWood, texStone, texFloor;
+GLuint texWood, texStone, texFloor, texTV;
 
 // Camera bay tự do
 //float camX = 0.0f, camY = 30.0f, camZ = 55.0f;

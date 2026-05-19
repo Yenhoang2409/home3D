@@ -9,17 +9,22 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "InteriorCamera.h"
+#include "Kitchen.h"
+#include "GroundFloorWC.h"
 
 using namespace std;
 
+extern void drawKitchenInterior();
+extern void drawLivingRoomInterior();
 // ==================== BIẾN TOÀN CỤC & CAMERA ====================
 GLuint texWood, texStone, texFloor;
 
 // Camera bay tự do
-float camX = 0.0f, camY = 30.0f, camZ = 55.0f;
-float camYaw = -90.0f, camPitch = -15.0f;
-float moveSpeed = 0.8f;
-float mouseSensitivity = 0.1f;
+//float camX = 0.0f, camY = 30.0f, camZ = 55.0f;
+//float camYaw = -90.0f, camPitch = -15.0f;
+//float moveSpeed = 0.8f;
+//float mouseSensitivity = 0.1f;
 
 bool keys[256] = { false };
 int lastMouseX = -1, lastMouseY = -1;
@@ -207,39 +212,46 @@ void drawGroundFloor() {
     drawGlassCube(1.9f, 0.0f, 0.0f, 3.8f, 4.3f, 0.05f, 0.7f, 0.8f, 0.9f, 0.4f);
     glPopMatrix();
 
-    // 2. Phòng Khách
-    drawTexturedCube(-5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood);
+    // =========================================================
+    // 2. Phòng Khách (CẬP NHẬT NỘI THẤT 3D CHUẨN)
+    // =========================================================
+    drawTexturedCube(-5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood); // Sàn gỗ
+
     // Hệ vách kính & Cửa sổ trượt
     drawGlassCube(-5.5f, 2.8f, 7.0f, 11.0f, 4.5f, 0.1f, 0.7f, 0.85f, 0.95f, 0.3f);
-    drawGlassCube(-11.0f, 2.8f, -1.0f, 0.1f, 4.5f, 6.0f, 0.7f, 0.85f, 0.95f, 0.3f); // Kính trái tĩnh
-    drawGlassCube(-10.9f, 2.8f, 4.5f - windowSlide, 0.1f, 4.5f, 5.0f, 0.7f, 0.85f, 0.95f, 0.3f); // Cửa trượt
+    drawGlassCube(-11.0f, 2.8f, -1.0f, 0.1f, 4.5f, 6.0f, 0.7f, 0.85f, 0.95f, 0.3f);
+    drawGlassCube(-10.9f, 2.8f, 4.5f - windowSlide, 0.1f, 4.5f, 5.0f, 0.7f, 0.85f, 0.95f, 0.3f);
 
     // Rèm âm trần
     drawCube(-10.8f, 2.8f, 1.5f + curtainOffset, 0.05f, 4.5f, 11.0f, 0.9f, 0.9f, 0.9f);
     drawCube(-5.5f + curtainOffset, 2.8f, 6.8f, 11.0f, 4.5f, 0.05f, 0.9f, 0.9f, 0.9f);
 
-    drawCube(-5.5f, 0.65f, 1.5f, 8.0f, 0.05f, 6.0f, 0.7f, 0.7f, 0.7f);
-    drawCube(-8.0f, 1.2f, 1.5f, 1.5f, 1.0f, 5.0f, 0.5f, 0.5f, 0.5f);
-    drawCube(-5.5f, 1.2f, 3.5f, 5.0f, 1.0f, 1.5f, 0.5f, 0.5f, 0.5f);
-    drawCube(-5.0f, 0.9f, 1.0f, 2.0f, 0.1f, 2.0f, 0.2f, 0.2f, 0.2f);
-    drawCube(-3.5f, 0.8f, 1.5f, 1.5f, 0.1f, 1.0f, 0.9f, 0.9f, 0.9f);
-    drawCylinder(-9.0f, 0.6f, 4.0f, 0.05f, 3.0f, 0.1f, 0.1f, 0.1f);
-    if (!isTransparentPass) { glPushMatrix(); glTranslatef(-9.0f, 3.6f, 4.0f); glColor3f(1.0f, 0.9f, 0.6f); glutSolidSphere(0.3f, 16, 16); glPopMatrix(); }
+    // GỌI HÀM VẼ NỘI THẤT PHÒNG KHÁCH MỚI (Sofa, Bàn kính, Kệ, TV)
+    // Phải nâng hệ tọa độ Y lên 0.65 (bằng độ cao mặt sàn gỗ) để đồ vật không bị chìm
+    glPushMatrix();
+    glTranslatef(0.0f, 0.65f, 0.0f);
+    drawLivingRoomInterior();
+    glPopMatrix();
 
-    // 3. Khu vực Bếp & Đảo Bếp
-    drawTexturedCube(5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood);
-    drawCube(10.0f, 2.8f, -2.5f, 1.5f, 4.5f, 6.0f, 0.6f, 0.6f, 0.6f);
-    drawCube(5.0f, 1.1f, -3.0f, 8.0f, 1.0f, 1.5f, 0.3f, 0.3f, 0.3f);
-    drawCube(5.0f, 3.5f, -3.0f, 8.0f, 1.5f, 1.0f, 0.8f, 0.75f, 0.65f);
-    drawCube(5.0f, 2.7f, -2.5f, 8.0f, 0.05f, 0.05f, 1.0f, 0.9f, 0.5f, true);
+    // ==========================================================
+    // 3. Khu vực Bếp & Đảo Bếp (ĐÃ THÊM VÁCH NGĂN TOILET)
+    // ==========================================================
+    drawTexturedCube(5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood); // Sàn gỗ khu vực bếp
 
-    // Thêm Tủ Lạnh (Đã khôi phục)
-    drawCube(10.0f, 1.5f, 1.5f, 1.5f, 3.0f, 1.5f, 0.6f, 0.6f, 0.6f);
-    if (!isTransparentPass) {
-        glPushMatrix(); glTranslatef(9.25f, 1.5f, 2.25f); glRotatef(fridgeAngle, 0.0f, 1.0f, 0.0f); drawCube(0.75f, 0.0f, 0.05f, 1.5f, 3.0f, 0.1f, 0.7f, 0.7f, 0.7f); glPopMatrix();
-    }
+    // --- XÂY DỰNG HỆ THỐNG VÁCH NGĂN ---
+    // 1. Vách ngăn bên phải (Phục hồi vách cũ nhưng làm mỏng lại cho tinh tế)
+    drawCube(10.0f, 2.8f, -3.5f, 0.5f, 4.5f, 6.0f, 0.85f, 0.85f, 0.85f);
 
-    // Đảo bếp
+    // 2. Bức tường ốp đá ngay sau lưng bếp (Ngăn cách hoàn toàn với Toilet)
+    // Bức tường này rộng 8m, cao đụng trần, che kín khu vực nhạy cảm
+    drawTexturedCube(6.0f, 2.8f, -3.25f, 8.0f, 4.5f, 0.2f, texStone);
+
+    // --- GỌI GIAN BẾP ---
+    glPushMatrix();
+    drawKitchenInterior(); // Dàn bếp sẽ tựa lưng hoàn hảo vào bức tường đá vừa xây
+    glPopMatrix();
+
+    // --- ĐẢO BẾP VÀ GHẾ BAR ---
     drawCube(5.0f, 1.2f, 0.0f, 5.0f, 1.2f, 1.5f, 0.2f, 0.2f, 0.2f);
     drawCube(5.0f, 1.85f, 0.0f, 5.2f, 0.1f, 1.8f, 0.95f, 0.95f, 0.95f);
     for (int i = 0; i < 4; i++) {
@@ -273,16 +285,19 @@ void drawGroundFloor() {
     drawCube(0.0f, 2.8f, -1.7f, 4.0f, 0.1f, 0.1f, 0.2f, 0.2f, 0.2f);
 
     // 6. Phòng Vệ Sinh Khách
-    drawCube(6.0f, 2.8f, -6.5f, 8.0f, 4.5f, 0.2f, 0.85f, 0.85f, 0.85f);
-    drawCube(2.0f, 2.8f, -5.0f, 0.2f, 4.5f, 3.0f, 0.85f, 0.85f, 0.85f);
-    drawCube(6.0f, 0.65f, -5.0f, 8.0f, 0.05f, 3.0f, 0.4f, 0.4f, 0.45f);
+    drawCube(6.0f, 2.8f, -6.5f, 8.0f, 4.5f, 0.2f, 0.75f, 0.75f, 0.75f);
+    drawCube(2.0f, 2.8f, -5.0f, 0.2f, 4.5f, 3.0f, 0.75f, 0.75f, 0.75f);
+
+    // SÀN WC MÀU TỐI (Xám đen) giúp chống chói và làm nổi bật thiết bị vệ sinh
+    drawCube(6.0f, 0.65f, -5.0f, 8.0f, 0.05f, 3.0f, 0.15f, 0.15f, 0.15f);
     drawCube(3.0f, 1.6f, -3.5f, 1.4f, 2.0f, 0.1f, 0.3f, 0.2f, 0.1f);
 
     drawCube(4.0f, 1.4f, -6.0f, 1.2f, 0.2f, 0.8f, 0.9f, 0.9f, 0.9f);
     drawCube(4.0f, 2.5f, -6.3f, 1.0f, 1.0f, 0.05f, 0.6f, 0.8f, 0.9f);
     drawCube(4.0f, 2.5f, -6.35f, 1.1f, 1.1f, 0.02f, 1.0f, 0.9f, 0.6f, true);
 
-    drawToilet(8.0f, 0.6f, -5.5f);
+    // GỌI HÀM VẼ WC: Đã nâng Y = 0.68f để bồn cầu/rửa tay nằm đúng trên mặt sàn
+    drawGroundFloorWC(7.0f, 0.68f, -5.5f);
 }
 
 // ==================== TẦNG LẦU (KHÔNG GIAN NGHỈ NGƠI) ====================
@@ -381,15 +396,12 @@ void drawHUD() {
 void renderScene() {
     if (isRaining) glClearColor(0.4f, 0.45f, 0.5f, 1.0f);
     else glClearColor(0.6f, 0.8f, 0.95f, 1.0f);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    float radYaw = camYaw * 3.14159f / 180.0f;
-    float radPitch = camPitch * 3.14159f / 180.0f;
-    float lookX = camX + cos(radPitch) * cos(radYaw);
-    float lookY = camY + sin(radPitch);
-    float lookZ = camZ + cos(radPitch) * sin(radYaw);
-    gluLookAt(camX, camY, camZ, lookX, lookY, lookZ, 0.0f, 1.0f, 0.0f);
+    // 1. ÁP DỤNG CAMERA MỚI (Thay thế toàn bộ cụm tính toán và gluLookAt cũ)
+    CameraApply();
 
     glEnable(GL_LIGHTING); glEnable(GL_LIGHT0);
     GLfloat lightPos[] = { 10.0f, 50.0f, 20.0f, 1.0f };
@@ -399,34 +411,29 @@ void renderScene() {
 
     glPushMatrix();
     glScalef(GLOBAL_SCALE, GLOBAL_SCALE, GLOBAL_SCALE);
-
     isTransparentPass = false;
     drawFullHouse();
-
     isTransparentPass = true;
     glDepthMask(GL_FALSE);
     drawFullHouse();
     glDepthMask(GL_TRUE);
-
     glPopMatrix();
 
     drawRain();
     drawHUD();
+
+    // 2. VẼ GIAO DIỆN CAMERA NỘI THẤT (Chèn ngay trước khi Swap Buffers)
+    // Lưu ý: Đổi 1280, 720 thành chiều rộng/chiều cao cửa sổ của bạn nếu cần.
+    CameraDrawHUD(1280, 720);
+
     glutSwapBuffers();
 }
 
 void update(int value) {
-    float radYaw = camYaw * 3.14159f / 180.0f;
-    float forwardX = cos(radYaw), forwardZ = sin(radYaw);
-    float rightX = cos(radYaw - 3.14159f / 2.0f), rightZ = sin(radYaw - 3.14159f / 2.0f);
+    // 3. CẬP NHẬT DI CHUYỂN CAMERA (Thay thế toàn bộ cục logic WASD cũ)
+    CameraUpdate(GLOBAL_SCALE);
 
-    if (keys['w']) { camX += forwardX * moveSpeed; camZ += forwardZ * moveSpeed; }
-    if (keys['s']) { camX -= forwardX * moveSpeed; camZ -= forwardZ * moveSpeed; }
-    if (keys['a']) { camX -= rightX * moveSpeed; camZ -= rightZ * moveSpeed; }
-    if (keys['d']) { camX += rightX * moveSpeed; camZ += rightZ * moveSpeed; }
-    if (keys['q']) camY += moveSpeed;
-    if (keys['e']) camY -= moveSpeed;
-
+    // Các logic đồ vật trong nhà được giữ nguyên vẹn
     if (fanOn) fanAngle += fanSpeed;
     if (mainDoorOpen && mainDoorAngle < 90.0f) mainDoorAngle += 2.0f;
     if (!mainDoorOpen && mainDoorAngle > 0.0f) mainDoorAngle -= 2.0f;
@@ -443,7 +450,10 @@ void update(int value) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    keys[key] = true;
+    // 4. CHUYỂN GIAO PHÍM BẤM CHO CAMERA MỚI
+    CameraKeyDown(key, x, y);
+
+    // Đã xóa dòng "keys[key] = true;" cũ vì hệ thống mới tự quản lý mảng keys
     switch (key) {
     case 27: exit(0); break;
     case 'o': mainDoorOpen = !mainDoorOpen; break;
@@ -455,23 +465,48 @@ void keyboard(unsigned char key, int x, int y) {
     case 'r': isRaining = !isRaining; break;
     }
 }
-void keyboardUp(unsigned char key, int x, int y) { keys[key] = false; }
+
+void keyboardUp(unsigned char key, int x, int y) {
+    // 5. CHUYỂN GIAO SỰ KIỆN NHẢ PHÍM
+    CameraKeyUp(key, x, y);
+}
 
 void mouseMotion(int x, int y) {
-    if (lastMouseX == -1) { lastMouseX = x; lastMouseY = y; }
-    camYaw += (x - lastMouseX) * mouseSensitivity * 20.0f;
-    camPitch -= (y - lastMouseY) * mouseSensitivity * 20.0f;
-    if (camPitch > 89.0f) camPitch = 89.0f; if (camPitch < -89.0f) camPitch = -89.0f;
-    lastMouseX = x; lastMouseY = y;
+    // 6. THAY THẾ TOÀN BỘ LOGIC QUAY CHUỘT BẰNG HÀM MỚI
+    CameraMouseMotion(x, y);
 }
-void mousePassive(int x, int y) { mouseMotion(x, y); }
+
+void mousePassive(int x, int y) {
+    CameraMouseMotion(x, y);
+}
 
 void init() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
-    GLfloat ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+
+    // 1. BẬT CHUẨN HÓA PHÁP TUYẾN (CỰC KỲ QUAN TRỌNG)
+    // Giúp OpenGL tự động tính toán lại vector pháp tuyến sau khi bạn dùng lệnh glScalef. 
+    // Thiếu dòng này, ánh sáng chiếu lên các vật thể bị scale sẽ bị lỗi lóe sáng.
+    glEnable(GL_NORMALIZE);
+
+    // 2. GIẢM ÁNH SÁNG MÔI TRƯỜNG XUỐNG
+    // Giảm từ 0.8f xuống 0.3f để tạo ra độ tương phản (có mảng sáng, mảng tối).
+    GLfloat ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-    texWood = loadTexture("wood.jpg"); texStone = loadTexture("stone.jpg"); texFloor = loadTexture("floor.jpg");
+
+    // Kích hoạt ánh sáng khuếch tán (Diffuse) cho Light0 để chiếu rõ khối 3D
+    GLfloat light0_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+
+    texWood = loadTexture("wood.jpg");
+    texStone = loadTexture("stone.jpg");
+    texFloor = loadTexture("floor.jpg");
+
+    // Khởi tạo vị trí Camera ban đầu 
+    CameraInit(0.0f, 2.5f * 4.5f, 12.0f * 4.5f);
+
+    // Ảnh nhà bếp
+    initKitchenTextures();
 }
 
 void reshape(int w, int h) {

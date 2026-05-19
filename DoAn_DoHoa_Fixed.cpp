@@ -17,14 +17,9 @@ using namespace std;
 
 extern void drawKitchenInterior();
 extern void drawLivingRoomInterior();
+extern void LivingRoomKeyboard(unsigned char key, int x, int y);
 // ==================== BIẾN TOÀN CỤC & CAMERA ====================
 GLuint texWood, texStone, texFloor, texTV;
-
-// Camera bay tự do
-//float camX = 0.0f, camY = 30.0f, camZ = 55.0f;
-//float camYaw = -90.0f, camPitch = -15.0f;
-//float moveSpeed = 0.8f;
-//float mouseSensitivity = 0.1f;
 
 bool keys[256] = { false };
 int lastMouseX = -1, lastMouseY = -1;
@@ -213,7 +208,7 @@ void drawGroundFloor() {
     glPopMatrix();
 
     // =========================================================
-    // 2. Phòng Khách (CẬP NHẬT NỘI THẤT 3D CHUẨN)
+    // 2. Phòng Khách
     // =========================================================
     drawTexturedCube(-5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood); // Sàn gỗ
 
@@ -227,23 +222,21 @@ void drawGroundFloor() {
     drawCube(-5.5f + curtainOffset, 2.8f, 6.8f, 11.0f, 4.5f, 0.05f, 0.9f, 0.9f, 0.9f);
 
     // GỌI HÀM VẼ NỘI THẤT PHÒNG KHÁCH MỚI (Sofa, Bàn kính, Kệ, TV)
-    // Phải nâng hệ tọa độ Y lên 0.65 (bằng độ cao mặt sàn gỗ) để đồ vật không bị chìm
     glPushMatrix();
     glTranslatef(0.0f, 0.65f, 0.0f);
     drawLivingRoomInterior();
     glPopMatrix();
 
     // ==========================================================
-    // 3. Khu vực Bếp & Đảo Bếp (ĐÃ THÊM VÁCH NGĂN TOILET)
+    // 3. Khu vực Bếp & Đảo Bếp
     // ==========================================================
     drawTexturedCube(5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood); // Sàn gỗ khu vực bếp
 
     // --- XÂY DỰNG HỆ THỐNG VÁCH NGĂN ---
-    // 1. Vách ngăn bên phải (Phục hồi vách cũ nhưng làm mỏng lại cho tinh tế)
+    // 1. Vách ngăn bên phải
     drawCube(10.0f, 2.8f, -3.5f, 0.5f, 4.5f, 6.0f, 0.85f, 0.85f, 0.85f);
 
     // 2. Bức tường ốp đá ngay sau lưng bếp (Ngăn cách hoàn toàn với Toilet)
-    // Bức tường này rộng 8m, cao đụng trần, che kín khu vực nhạy cảm
     drawTexturedCube(6.0f, 2.8f, -3.25f, 8.0f, 4.5f, 0.2f, texStone);
 
     // --- GỌI GIAN BẾP ---
@@ -350,8 +343,8 @@ void drawFirstFloor() {
 void drawGround() {
     glColor3f(0.2f, 0.4f, 0.15f);
     glBegin(GL_QUADS);
-    glVertex3f(-40.0f, -0.01f, -40.0f); glVertex3f(40.0f, -0.01f, -40.0f);
-    glVertex3f(40.0f, -0.01f, 40.0f); glVertex3f(-40.0f, -0.01f, 40.0f);
+    glVertex3f(-150.0f, -0.01f, -150.0f); glVertex3f(150.0f, -0.01f, -150.0f);
+    glVertex3f(150.0f, -0.01f, 150.0f); glVertex3f(-150.0f, -0.01f, 150.0f);
     glEnd();
 }
 
@@ -360,10 +353,22 @@ void drawRain() {
     glColor4f(0.7f, 0.8f, 0.9f, 0.8f);
     glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glLineWidth(2.0f);
     glBegin(GL_LINES);
-    for (int i = 0; i < 800; i++) {
-        float x = (rand() % 800 - 400) / 10.0f; float z = (rand() % 800 - 400) / 10.0f;
-        float y = 20.0f + (rand() % 100) / 10.0f; float len = 1.0f + (rand() % 15) / 10.0f;
-        glVertex3f(x, y, z); glVertex3f(x - 0.3f, y - len, z);
+    for (int i = 0; i < 2000; i++) {
+        // Phủ rộng khu vực sân vườn: [-100.0f, 100.0f]
+        float x = (rand() % 2000 - 1000) / 10.0f;
+        float z = (rand() % 2000 - 1000) / 10.0f;
+
+        // THUẬT TOÁN LỌC MƯA TRONG NHÀ:
+        if (x > -52.0f && x < 52.0f && z > -43.0f && z < 43.0f) {
+            continue;
+        }
+
+        // Mưa rơi từ trên mây (Cao hơn đỉnh mái nhà 46.0f)
+        float y = 50.0f + (rand() % 500) / 10.0f; // Y ngẫu nhiên từ 50.0f đến 100.0f
+        float len = 2.0f + (rand() % 20) / 10.0f;
+
+        glVertex3f(x, y, z);
+        glVertex3f(x - 0.5f, y - len, z); // Trừ đi 0.5f ở trục X để tạo hiệu ứng mưa bay xiên theo gió
     }
     glEnd(); glDisable(GL_BLEND);
 }
@@ -453,16 +458,17 @@ void keyboard(unsigned char key, int x, int y) {
     // 4. CHUYỂN GIAO PHÍM BẤM CHO CAMERA MỚI
     CameraKeyDown(key, x, y);
 
-    // Đã xóa dòng "keys[key] = true;" cũ vì hệ thống mới tự quản lý mảng keys
+    LivingRoomKeyboard(key, x, y);
+
     switch (key) {
-    case 27: exit(0); break;
-    case 'o': mainDoorOpen = !mainDoorOpen; break;
-    case 'k': windowOpen = !windowOpen; break;
-    case 'c': curtainOpen = !curtainOpen; break;
-    case 'f': fanOn = !fanOn; break;
-    case 't': tvOn = !tvOn; break;
-    case 'g': fridgeOpen = !fridgeOpen; break;
-    case 'r': isRaining = !isRaining; break;
+        case 27: exit(0); break;
+        case 'o': mainDoorOpen = !mainDoorOpen; break;
+        case 'k': windowOpen = !windowOpen; break;
+        case 'c': curtainOpen = !curtainOpen; break;
+        case 'f': fanOn = !fanOn; break;
+        case 't': tvOn = !tvOn; break;
+        case 'g': fridgeOpen = !fridgeOpen; break;
+        case 'r': isRaining = !isRaining; break;
     }
 }
 
@@ -486,7 +492,6 @@ void init() {
 
     // 1. BẬT CHUẨN HÓA PHÁP TUYẾN (CỰC KỲ QUAN TRỌNG)
     // Giúp OpenGL tự động tính toán lại vector pháp tuyến sau khi bạn dùng lệnh glScalef. 
-    // Thiếu dòng này, ánh sáng chiếu lên các vật thể bị scale sẽ bị lỗi lóe sáng.
     glEnable(GL_NORMALIZE);
 
     // 2. GIẢM ÁNH SÁNG MÔI TRƯỜNG XUỐNG

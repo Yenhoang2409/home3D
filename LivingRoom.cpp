@@ -34,6 +34,7 @@
 // ============================================================
 static const float LV_PI = 3.14159265f;
 static const float LV_DEG2RAD = LV_PI / 180.0f;
+static bool  lvLightOn = true; // bóng đèn
 
 // Gioi han di chuyen trong pham vi phong khach (don vi noi bo)
 static const float LV_BOUND_X = 4.5f;
@@ -674,6 +675,97 @@ static void drawCeilingFan(float x, float y, float z)
 }
 
 // ============================================================
+// VẼ ĐÈN ỐP TRẦN (Kích hoạt nguồn sáng thật GL_LIGHT1)
+// ============================================================
+static void drawCeilingLight(float x, float y, float z) {
+    if (isTransparentPass) return;
+    glPushMatrix();
+    glTranslatef(x, y, z);
+
+    // 1. Đế đèn ốp trần bằng viền kim loại
+    lv_mat(0.2f, 0.2f, 0.2f, 0.8f, 0.8f, 0.8f, 80);
+    glPushMatrix(); glTranslatef(0, 0.05f, 0); lv_drawBox(0.8f, 0.05f, 0.8f); glPopMatrix();
+
+    // 2. Chụp mica phát sáng & Xử lý Nguồn sáng thật
+    if (lvLightOn) {
+        // Làm bóng đèn tự phát sáng rực rỡ
+        GLfloat em[] = { 1.0f, 0.95f, 0.8f, 1.0f }; // Vàng ấm
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, em);
+        glColor3f(1.0f, 0.95f, 0.8f);
+
+        // KÍCH HOẠT ĐÈN CHIẾU SÁNG TOÀN CĂN PHÒNG
+        glEnable(GL_LIGHT1);
+        GLfloat lightPos[] = { 0.0f, -0.5f, 0.0f, 1.0f }; // Vị trí phát sáng tại tâm bóng đèn
+        GLfloat lightDif[] = { 0.6f, 0.6f, 0.5f, 1.0f };  // Ánh sáng tỏa ra
+        glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDif);
+    }
+    else {
+        // Khi tắt: Mica trắng đục, tắt nguồn sáng
+        lv_mat(0.9f, 0.9f, 0.9f, 0.2f, 0.2f, 0.2f, 20);
+        glDisable(GL_LIGHT1);
+    }
+
+    glPushMatrix();
+    glutSolidSphere(0.3, 20, 20); // Bầu đèn tròn
+    glPopMatrix();
+
+    lv_resetEmission();
+    glPopMatrix();
+}
+
+// ============================================================
+// VẼ CÔNG TẮC ĐIỆN & HIỆN HUD KHI LẠI GẦN
+// ============================================================
+static void drawLightSwitch(float x, float y, float z) {
+    if (isTransparentPass) return;
+    glPushMatrix();
+    glTranslatef(x, y, z);
+
+    // 1. Khung công tắc (Áp sát vào tường trái X = -4.88f)
+    lv_mat(0.9f, 0.9f, 0.9f, 0.1f, 0.1f, 0.1f, 10);
+    lv_drawBox(0.02f, 0.15f, 0.1f); // Hộp mỏng dẹt
+
+    // 2. Nút bấm điện (Bật thì hiện đèn đỏ nhỏ, Tắt hiện đèn xám)
+    if (lvLightOn) {
+        lv_mat(0.9f, 0.2f, 0.2f, 0.5f, 0.5f, 0.5f, 50); // Nút đỏ rực
+        glPushMatrix(); glTranslatef(0.015f, 0.02f, 0.0f); lv_drawBox(0.01f, 0.04f, 0.04f); glPopMatrix();
+    }
+    else {
+        lv_mat(0.3f, 0.3f, 0.3f, 0.5f, 0.5f, 0.5f, 50); // Nút xám chìm
+        glPushMatrix(); glTranslatef(0.015f, -0.02f, 0.0f); lv_drawBox(0.01f, 0.04f, 0.04f); glPopMatrix();
+    }
+
+    // 3. HUD: CHỈ HIỆN CHỮ KHI ĐỨNG GẦN CÔNG TẮC
+    GLfloat mv[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, mv);
+    float distance = std::sqrt(mv[12] * mv[12] + mv[13] * mv[13] + mv[14] * mv[14]);
+
+    if (distance < 15.0f) { // Nếu khoảng cách tới công tắc < 15
+        glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity(); gluOrtho2D(0, 800, 0, 600);
+        glMatrixMode(GL_MODELVIEW);  glPushMatrix(); glLoadIdentity();
+        glDisable(GL_DEPTH_TEST); glDisable(GL_LIGHTING);
+
+        const char* hint = lvLightOn ? "Nhan [B] de TAT Den Phong Khach" : "Nhan [B] de BAT Den Phong Khach";
+
+        // Bóng chữ màu đen
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glRasterPos2f(282, 150); // Y=150 để nằm dưới dòng chữ của Quạt trần
+        for (const char* c = hint; *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+        // Chữ chính màu Cam rực rỡ
+        glColor3f(1.0f, 0.6f, 0.0f);
+        glRasterPos2f(280, 152);
+        for (const char* c = hint; *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+        glEnable(GL_LIGHTING); glEnable(GL_DEPTH_TEST);
+        glMatrixMode(GL_PROJECTION); glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);  glPopMatrix();
+    }
+    glPopMatrix();
+}
+
+// ============================================================
 // HAM TONG HOP  -  Goi tu drawGroundFloor() trong file chinh
 //
 // Goc toa do (0,0,0) o day tuong ung voi vi tri da duoc
@@ -726,6 +818,12 @@ void drawLivingRoomInterior()
     // --- Quạt trần ---
     drawCeilingFan(0.0f, 3.6f, 0.0f);
 
+    // Đèn trần cỡ lớn: Đặt ngay giữa phòng khách (gần quạt)
+    drawCeilingLight(0.0f, 3.6f, -2.0f);
+
+    // Công tắc điện: Ốp sát vào bức tường bên trái (X = -4.88f) vừa tầm tay với (Y = 1.3f)
+    drawLightSwitch(-4.88f, 1.3f, 2.0f);
+
     glPopMatrix();
 }
 
@@ -750,6 +848,9 @@ void LivingRoomKeyboard(unsigned char key, int /*x*/, int /*y*/)
     case '3': lvSelectedObj = 0; break;
 
         // Di chuyen
+    case 'b': case 'B':
+        lvLightOn = !lvLightOn;
+        break;
     case 'i': case 'I':
         if (lvSelectedObj == 1) { sofaZ -= STEP; lv_clamp(sofaX, sofaZ); }
         if (lvSelectedObj == 2) { tableZ -= STEP; lv_clamp(tableX, tableZ); }
@@ -784,12 +885,7 @@ void LivingRoomKeyboard(unsigned char key, int /*x*/, int /*y*/)
 // UPDATE ANIMATION - Goi trong update() cua file chinh moi frame
 // dt: thoi gian giua 2 frame (giay)
 // ============================================================
-// LUU Y: tvR/tvG/tvB da duoc cap nhat trong update() cua file
-// chinh theo cach: if(tvOn){ tvR=rand()%10/10.f; ... }
-// Ham nay chi cap nhat lvTvTimer de dung cho animation mo
-// trong tuong lai neu can.
 void LivingRoomUpdate(float dt)
 {
     lvTvTimer += dt;
-    // (San sang cho cac animation bo sung trong tuong lai)
 }

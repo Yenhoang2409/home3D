@@ -1,6 +1,6 @@
 ﻿#include "Stairs.h"
 
-extern bool isTransparentPass; // Đồng bộ cơ chế Multi-Pass với file main
+extern bool isTransparentPass;
 
 // Hàm thiết lập vật liệu mô phỏng thực tế
 static void setStairsMaterial(float r, float g, float b, float shininess, float specIntensity) {
@@ -54,25 +54,35 @@ void drawStairsWithBalustrade() {
         // --- VẼ THANH TAY VỊN INOX AN TOÀN ---
         setStairsMaterial(0.85f, 0.85f, 0.88f, 128.0f, 1.0f); // Vật liệu Inox gương bóng bóng
 
-        // Trụ đứng đỡ tay vịn đoạn 1
-        stairs_drawCube(1.5f, 1.3f, -1.75f, 0.04f, 1.4f, 0.04f);   // Trụ tại chân thang
-        stairs_drawCube(-1.7f, 3.3f, -1.75f, 0.04f, 1.4f, 0.04f);  // Trụ tại chiếu nghỉ
-
-        // FIX THANH TAY VỊN ĐOẠN 1: Đổi góc quay từ 32.0f sang -32.0f để chạy dốc xuống chuẩn theo bậc thang
+        // bên sườn phải (Z = -1.75f) ===
+        stairs_drawCube(1.5f, 1.3f, -1.75f, 0.04f, 1.4f, 0.04f);
+        stairs_drawCube(-1.7f, 3.3f, -1.75f, 0.04f, 1.4f, 0.04f);
         glPushMatrix();
-        glTranslatef(-0.1f, 2.3f, -1.75f);
-        glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
+        glTranslatef(-0.1f, 2.3f, -1.75f); glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
         stairs_drawCube(0.0f, 0.0f, 0.0f, 3.8f, 0.05f, 0.05f);
         glPopMatrix();
 
-        // Trụ đứng đỡ tay vịn đoạn 2
+        // bên sườn trái sát vách bếp (Z = -4.25f) ===
+        stairs_drawCube(1.5f, 1.3f, -4.25f, 0.04f, 1.4f, 0.04f);
+        stairs_drawCube(-1.7f, 3.3f, -4.25f, 0.04f, 1.4f, 0.04f);
+        glPushMatrix();
+        glTranslatef(-0.1f, 2.3f, -4.25f); glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
+        stairs_drawCube(0.0f, 0.0f, 0.0f, 3.8f, 0.05f, 0.05f);
+        glPopMatrix();
+
+        //bên sườn phải (X = -1.3f) ===
         stairs_drawCube(-1.3f, 3.55f, -1.5f, 0.04f, 1.4f, 0.04f);
         stairs_drawCube(-1.3f, 5.55f, 1.7f, 0.04f, 1.4f, 0.04f);
-
-        // Thanh tay vịn chéo dọc đoạn 2
         glPushMatrix();
-        glTranslatef(-1.3f, 4.55f, 0.1f);
-        glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
+        glTranslatef(-1.3f, 4.55f, 0.1f); glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
+        stairs_drawCube(0.0f, 0.0f, 0.0f, 0.05f, 0.05f, 3.8f);
+        glPopMatrix();
+
+        //bên sườn trái sát tường phòng ngủ (X = -2.7f) ===
+        stairs_drawCube(-2.7f, 3.55f, -1.5f, 0.04f, 1.4f, 0.04f);
+        stairs_drawCube(-2.7f, 5.55f, 1.7f, 0.04f, 1.4f, 0.04f);
+        glPushMatrix();
+        glTranslatef(-2.7f, 4.55f, 0.1f); glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
         stairs_drawCube(0.0f, 0.0f, 0.0f, 0.05f, 0.05f, 3.8f);
         glPopMatrix();
     }
@@ -85,25 +95,35 @@ void drawStairsWithBalustrade() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
-        // Cấu hình kính cường lực
-        GLfloat diffuse[] = { 0.7f, 0.9f, 1.0f, 0.25f }; // Alpha 25%
+        // Cấu hình kính cường lực kiến trúc xanh trong suốt
+        GLfloat diffuse[] = { 0.7f, 0.9f, 1.0f, 0.25f };
         GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 120.0f);
         glColor4f(0.7f, 0.9f, 1.0f, 0.25f);
 
-        // FIX VÁCH KÍNH ĐOẠN 1: Đổi góc quay từ 32.0f sang -32.0f để vách kính song song với độ dốc thực tế
+        // === ĐOẠN 1: Vách kính bên phải cũ ===
         glPushMatrix();
-        glTranslatef(-0.1f, 1.85f, -1.75f);
-        glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
+        glTranslatef(-0.1f, 1.85f, -1.75f); glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
         stairs_drawCube(0.0f, 0.0f, 0.0f, 3.6f, 0.7f, 0.02f);
         glPopMatrix();
 
-        // Vách kính bảo vệ đoạn 2
+        // === THÊM MỚI ĐOẠN 1: Vách kính bảo vệ bên trái (Sát vách bếp) ===
         glPushMatrix();
-        glTranslatef(-1.3f, 4.1f, 0.1f);
-        glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
+        glTranslatef(-0.1f, 1.85f, -4.25f); glRotatef(-32.0f, 0.0f, 0.0f, 1.0f);
+        stairs_drawCube(0.0f, 0.0f, 0.0f, 3.6f, 0.7f, 0.02f);
+        glPopMatrix();
+
+        // === ĐOẠN 2: Vách kính bên phải cũ ===
+        glPushMatrix();
+        glTranslatef(-1.3f, 4.1f, 0.1f); glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
+        stairs_drawCube(0.0f, 0.0f, 0.0f, 0.02f, 0.7f, 3.6f);
+        glPopMatrix();
+
+        // === THÊM MỚI ĐOẠN 2: Vách kính bảo vệ bên trái (Sát tường phòng ngủ) ===
+        glPushMatrix();
+        glTranslatef(-2.7f, 4.1f, 0.1f); glRotatef(-32.0f, 1.0f, 0.0f, 0.0f);
         stairs_drawCube(0.0f, 0.0f, 0.0f, 0.02f, 0.7f, 3.6f);
         glPopMatrix();
 

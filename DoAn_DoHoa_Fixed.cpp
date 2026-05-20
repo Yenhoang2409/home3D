@@ -23,7 +23,7 @@ extern void LivingRoomKeyboard(unsigned char key, int x, int y);
 extern void FirstFloorWCMouse(int button, int state, int x, int y);
 extern void FirstFloorWCUpdate();
 // ==================== BIẾN TOÀN CỤC & CAMERA ====================
-GLuint texWood, texStone, texFloor, texTV;
+GLuint texWood, texStone, texFloor;
 
 bool keys[256] = { false };
 int lastMouseX = -1, lastMouseY = -1;
@@ -490,12 +490,11 @@ void init() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
 
-    // 1. BẬT CHUẨN HÓA PHÁP TUYẾN (CỰC KỲ QUAN TRỌNG)
-    // Giúp OpenGL tự động tính toán lại vector pháp tuyến sau khi bạn dùng lệnh glScalef. 
+    // 1. BẬT CHUẨN HÓA PHÁP TUYẾN
+    // Giúp OpenGL tự động tính toán lại vector pháp tuyến khi dung glScalef. 
     glEnable(GL_NORMALIZE);
 
-    // 2. GIẢM ÁNH SÁNG MÔI TRƯỜNG XUỐNG
-    // Giảm từ 0.8f xuống 0.3f để tạo ra độ tương phản (có mảng sáng, mảng tối).
+    // 2. ÁNH SÁNG MÔI TRƯỜNG
     GLfloat ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 

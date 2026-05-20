@@ -1,21 +1,5 @@
 ﻿// ==========================================================
-// LivingRoom.cpp  -  Module Phong Khach 3D
-// Tuong thich 100% voi DoAn_DoHoa_Fixed.cpp
-//
-// Cach tich hop vao du an:
-//   1. Them #include "LivingRoom.h" vao DoAn_DoHoa_Fixed.cpp
-//   2. Trong ham keyboard() cua file chinh, them:
-//          LivingRoomKeyboard(key, x, y);
-//   3. Trong ham update() cua file chinh, them:
-//          LivingRoomUpdate(0.016f);
-//   4. Ham drawLivingRoomInterior() da duoc goi san trong
-//      drawGroundFloor() bang cach:
-//          glPushMatrix();
-//          glTranslatef(0.0f, 0.65f, 0.0f);
-//          drawLivingRoomInterior();
-//          glPopMatrix();
-//
-// Ky thuat ap dung (theo slide ly thuyet):
+// Ky thuat ap dung
 //   - Hierarchical Modeling : Sofa chu L (Push/PopMatrix)
 //   - Phep bien doi          : Tinh tien, quay (Chap 6)
 //   - Alpha Blending         : Mat ban tra kinh (2-Pass)
@@ -333,10 +317,7 @@ static void drawTVSystem()
     lv_drawBox(4.30f, 2.45f, 0.11f);   // Vien ngoai
 
     // === 3.4 Man hinh - Dynamic Emission ===
-    // Ly thuyet: GL_EMISSION la mau phat ra khong phu thuoc nguon sang
-    // Khi tvOn=true: man hinh tu phat sang voi mau tvR/tvG/tvB
-    // tvR/tvG/tvB duoc cap nhat moi frame trong update() cua file chinh:
-    //   if (tvOn) { tvR = rand%10/10.0f; tvG = ...; tvB = ...; }
+    // GL_EMISSION la mau phat ra khong phu thuoc nguon sang
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, 0.062f);  // Nho ra truoc vien mot chut
 
@@ -419,7 +400,7 @@ static void drawTVSystem()
 }
 
 // ============================================================
-// 4. THAM LON (trang tri san)
+// 4. THAM LOT (trang tri san)
 // ============================================================
 static void drawRug()
 {
@@ -779,7 +760,7 @@ void drawLivingRoomInterior()
     glPushMatrix();
     glTranslatef(-5.5f, 0.0f, 1.5f);
 
-    // --- Tham lon ---
+    // --- Thảm lót ---
     drawRug();
 
     // --- Sofa chu L (Hierarchical Modeling) ---
@@ -805,11 +786,8 @@ void drawLivingRoomInterior()
     drawPlant(-4.5f, -3.8f);
 
     // --- Tranh tuong phia sau (sat tuong TV) ---
-    // Dat 2 buc tranh 2 ben TV
     drawWallArt(-3.8f, 2.20f, -4.88f, 0.90f, 1.20f,
         0.45f, 0.30f, 0.18f, 0.25f, 0.45f, 0.68f);
-    drawWallArt(3.8f, 2.20f, -4.88f, 0.90f, 1.20f,
-        0.45f, 0.30f, 0.18f, 0.68f, 0.30f, 0.25f);
 
     // --- Tranh tuong ben canh ---
     drawWallArt(-4.88f, 2.50f, 0.0f, 0.08f, 1.50f,

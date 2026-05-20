@@ -12,12 +12,15 @@
 #include "InteriorCamera.h"
 #include "Kitchen.h"
 #include "GroundFloorWC.h"
+#include "FirstFloorWC.h"
 
 using namespace std;
 
 extern void drawKitchenInterior();
 extern void drawLivingRoomInterior();
 extern void LivingRoomKeyboard(unsigned char key, int x, int y);
+extern void FirstFloorWCMouse(int button, int state, int x, int y);
+extern void FirstFloorWCUpdate();
 // ==================== BIẾN TOÀN CỤC & CAMERA ====================
 GLuint texWood, texStone, texFloor, texTV;
 
@@ -331,7 +334,7 @@ void drawFirstFloor() {
     drawGlassCube(6.5f, 7.5f, -3.0f, 3.0f, 5.0f, 0.1f, 0.7f, 0.9f, 1.0f, 0.3f);
     drawCylinder(7.0f, 9.5f, -5.0f, 0.02f, 1.0f, 0.8f, 0.8f, 0.8f);
     drawCube(7.0f, 9.5f, -5.0f, 0.4f, 0.05f, 0.4f, 0.8f, 0.8f, 0.8f);
-    drawToilet(3.0f, 5.0f, -6.5f);
+    drawFirstFloorWC(5.0f, 5.15f, -4.5f);
     drawCube(3.0f, 5.8f, -2.5f, 1.5f, 0.1f, 1.0f, 0.2f, 0.2f, 0.2f);
     if (!isTransparentPass) { glPushMatrix(); glTranslatef(3.0f, 6.0f, -2.5f); glScalef(0.6f, 0.3f, 0.6f); glColor3f(0.9f, 0.9f, 0.9f); glutSolidSphere(0.5f, 16, 16); glPopMatrix(); }
 
@@ -450,6 +453,7 @@ void update(int value) {
     if (!fridgeOpen && fridgeAngle > 0.0f) fridgeAngle -= 2.0f;
     if (tvOn) { tvR = (rand() % 10) / 10.0f; tvG = (rand() % 10) / 10.0f; tvB = (rand() % 10) / 10.0f; }
 
+    FirstFloorWCUpdate();
     glutPostRedisplay();
     glutTimerFunc(16, update, 0);
 }
@@ -484,6 +488,11 @@ void mouseMotion(int x, int y) {
 
 void mousePassive(int x, int y) {
     CameraMouseMotion(x, y);
+}
+
+// Hàm Click chuột truyền tới phòng WC
+void mouseClick(int button, int state, int x, int y) {
+    FirstFloorWCMouse(button, state, x, y);
 }
 
 void init() {
@@ -534,6 +543,7 @@ int main(int argc, char** argv) {
     glutPassiveMotionFunc(mousePassive);
     glutMotionFunc(mouseMotion);
     glutTimerFunc(16, update, 0);
+    glutMouseFunc(mouseClick);
     glutMainLoop();
     return 0;
 }

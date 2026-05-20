@@ -20,12 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoAn_DoHoa_Fixed.cpp" />
+    <ClCompile Include="FirstFloorWC.cpp" />
     <ClCompile Include="GroundFloorWC.cpp" />
     <ClCompile Include="InteriorCamera.cpp" />
     <ClCompile Include="Kitchen.cpp" />
     <ClCompile Include="LivingRoom.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FirstFloorWC.h" />
     <ClInclude Include="GroundFloorWC.h" />
     <ClInclude Include="InteriorCamera.h" />
     <ClInclude Include="Kitchen.h" />

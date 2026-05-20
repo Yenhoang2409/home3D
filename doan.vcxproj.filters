@@ -30,6 +30,9 @@
     <ClCompile Include="GroundFloorWC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FirstFloorWC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GroundFloorWC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstFloorWC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

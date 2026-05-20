@@ -13,6 +13,7 @@
 #include "Kitchen.h"
 #include "GroundFloorWC.h"
 #include "FirstFloorWC.h"
+#include "Stairs.h"
 
 using namespace std;
 
@@ -215,7 +216,7 @@ void drawGroundFloor() {
     // =========================================================
     drawTexturedCube(-5.5f, 0.6f, 1.5f, 11.0f, 0.1f, 11.0f, texWood); // Sàn gỗ
 
-    // Hệ vách kính & Cửa sổ trượt
+    //// Hệ vách kính & Cửa sổ trượt
     drawGlassCube(-5.5f, 2.8f, 7.0f, 11.0f, 4.5f, 0.1f, 0.7f, 0.85f, 0.95f, 0.3f);
     drawGlassCube(-11.0f, 2.8f, -1.0f, 0.1f, 4.5f, 6.0f, 0.7f, 0.85f, 0.95f, 0.3f);
     drawGlassCube(-10.9f, 2.8f, 4.5f - windowSlide, 0.1f, 4.5f, 5.0f, 0.7f, 0.85f, 0.95f, 0.3f);
@@ -269,22 +270,14 @@ void drawGroundFloor() {
     drawCube(0.5f, 2.9f, 2.5f, 0.6f, 0.2f, 0.6f, 1.0f, 0.8f, 0.4f, true);
 
     // 5. Cầu Thang Trung Tâm 
-    for (int i = 0; i < 9; i++) {
-        drawCube(1.5f - i * 0.4f, 0.6f + i * 0.25f, -3.0f, 0.4f, 0.1f, 2.5f, 0.6f, 0.4f, 0.2f);
-        drawCube(1.5f - i * 0.4f, 0.5f + i * 0.25f, -1.7f, 0.4f, 0.05f, 0.05f, 1.0f, 0.8f, 0.2f, true);
-    }
-    drawCube(-2.0f, 2.85f, -3.0f, 1.5f, 0.1f, 2.5f, 0.6f, 0.4f, 0.2f);
-    for (int i = 0; i < 9; i++) {
-        drawCube(-2.0f, 3.1f + i * 0.25f, -1.5f + i * 0.4f, 1.5f, 0.1f, 0.4f, 0.6f, 0.4f, 0.2f);
-    }
-    drawGlassCube(0.0f, 2.0f, -1.7f, 4.0f, 1.5f, 0.05f, 0.7f, 0.9f, 1.0f, 0.3f);
-    drawCube(0.0f, 2.8f, -1.7f, 4.0f, 0.1f, 0.1f, 0.2f, 0.2f, 0.2f);
+    glPushMatrix();
+    drawStairsWithBalustrade();
+    glPopMatrix();
 
-    // 6. Phòng Vệ Sinh Khách
     drawCube(6.0f, 2.8f, -6.5f, 8.0f, 4.5f, 0.2f, 0.75f, 0.75f, 0.75f);
     drawCube(2.0f, 2.8f, -5.0f, 0.2f, 4.5f, 3.0f, 0.75f, 0.75f, 0.75f);
 
-    // SÀN WC MÀU TỐI (Xám đen) giúp chống chói và làm nổi bật thiết bị vệ sinh
+    //6. SÀN WC MÀU TỐI (Xám đen) giúp chống chói và làm nổi bật thiết bị vệ sinh
     drawCube(6.0f, 0.65f, -5.0f, 8.0f, 0.05f, 3.0f, 0.15f, 0.15f, 0.15f);
     drawCube(3.0f, 1.6f, -3.5f, 1.4f, 2.0f, 0.1f, 0.3f, 0.2f, 0.1f);
 
@@ -292,7 +285,7 @@ void drawGroundFloor() {
     drawCube(4.0f, 2.5f, -6.3f, 1.0f, 1.0f, 0.05f, 0.6f, 0.8f, 0.9f);
     drawCube(4.0f, 2.5f, -6.35f, 1.1f, 1.1f, 0.02f, 1.0f, 0.9f, 0.6f, true);
 
-    // GỌI HÀM VẼ WC: Đã nâng Y = 0.68f để bồn cầu/rửa tay nằm đúng trên mặt sàn
+    // KÍCH HOẠT LẠI HÀM VẼ TOILET, BỒN RỬA, GƯƠNG TỪ FILE GroundFloorWC.cpp
     drawGroundFloorWC(7.0f, 0.68f, -5.5f);
 }
 
@@ -332,8 +325,6 @@ void drawFirstFloor() {
     drawCube(5.0f, 7.5f, -4.5f, 6.0f, 5.0f, 6.0f, 0.85f, 0.85f, 0.85f);
     drawCube(5.0f, 5.1f, -4.5f, 6.0f, 0.05f, 6.0f, 0.5f, 0.5f, 0.5f);
     drawGlassCube(6.5f, 7.5f, -3.0f, 3.0f, 5.0f, 0.1f, 0.7f, 0.9f, 1.0f, 0.3f);
-    drawCylinder(7.0f, 9.5f, -5.0f, 0.02f, 1.0f, 0.8f, 0.8f, 0.8f);
-    drawCube(7.0f, 9.5f, -5.0f, 0.4f, 0.05f, 0.4f, 0.8f, 0.8f, 0.8f);
     drawFirstFloorWC(5.0f, 5.15f, -4.5f);
     drawCube(3.0f, 5.8f, -2.5f, 1.5f, 0.1f, 1.0f, 0.2f, 0.2f, 0.2f);
     if (!isTransparentPass) { glPushMatrix(); glTranslatef(3.0f, 6.0f, -2.5f); glScalef(0.6f, 0.3f, 0.6f); glColor3f(0.9f, 0.9f, 0.9f); glutSolidSphere(0.5f, 16, 16); glPopMatrix(); }

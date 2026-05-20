@@ -191,39 +191,6 @@ void drawStoveAndHood() {
     GLfloat default_emission[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, default_emission);
 
-    // 3. Máy hút mùi (ÁP DỤNG MA TRẬN BIẾN DẠNG - SHEARING)
-    GLfloat inox_specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, inox_specular);
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 60.0f);
-
-    glPushMatrix();
-    glTranslatef(0.0f, 0.8f, 0.0f);
-    glColor3f(0.6f, 0.65f, 0.7f);
-
-    // Đoạn vát chéo của máy hút mùi bằng Ma trận Shearing
-    // Cột của ma trận (Column-major order trong OpenGL)
-    GLfloat shearMatrix[16] = {
-        1.0f,  0.0f,  0.0f,  0.0f, // Cột 1
-        0.0f,  1.0f,  0.0f,  0.0f, // Cột 2
-        0.0f, -0.6f,  1.0f,  0.0f, // Cột 3: Trục Z bị biến dạng theo Y (-0.6)
-        0.0f,  0.0f,  0.0f,  1.0f  // Cột 4
-    };
-
-    glPushMatrix();
-    glMultMatrixf(shearMatrix); // Nhân ma trận biến dạng vào ModelView
-    glScalef(0.8f, 0.1f, 0.6f); // Scale sau khi đã biến dạng
-    drawTexturedBox(1.0f, 1.0f, 1.0f);
-    glPopMatrix();
-
-    // Ống khói vuông nối lên trần
-    glPushMatrix();
-    glTranslatef(0.0f, 0.3f, -0.15f);
-    glScalef(0.35f, 0.6f, 0.3f);
-    drawTexturedBox(1.0f, 1.0f, 1.0f);
-    glPopMatrix();
-
-    glPopMatrix();
-
     GLfloat default_spec[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, default_spec);
 
@@ -283,17 +250,40 @@ void drawFridge() {
 }
 
 // ==========================================================
-// HÀM TỔNG HỢP GỌI RA Ở FILE CHÍNH
+// HÀM TỔNG HỢP GỌI RA Ở FILE CHÍNH (CĂN CHỈNH TỌA ĐỘ CHUẨN)
 // ==========================================================
 void drawKitchenInterior() {
+    // -----------------------------------------------------------
+    // CỤM 1: BÀN BẾP DƯỚI + BỒN RỬA + BẾP TỪ (Nâng cao hẳn & Dịch trái)
+    // -----------------------------------------------------------
     glPushMatrix();
-    glTranslatef(5.0f, 0.0f, -2.5f);
+    // - Dịch sang trái (X từ 5.0f giảm xuống 4.2f) để thoát khỏi vật cản là tủ lạnh.
+    // - Nâng cao lên hẳn (Y từ 0.45f tăng mạnh lên 0.85f) để vượt hẳn lên trên bàn ăn.
+    // - Giữ nguyên chiều sâu Z = -2.5f áp sát tường.
+    glTranslatef(4.2f, 0.85f, -2.5f);
 
     drawKitchenCounter();     // Bàn đá và tủ dưới
-    drawHangingCabinets();    // Dàn tủ treo tường
-    drawSink();               // Bồn rửa & vòi nước (MỚI)
-    drawStoveAndHood();       // Bếp từ & máy hút mùi (MỚI)
-    drawFridge();             // Tủ lạnh Inox LED
+    drawSink();               // Bồn rửa & vòi nước
+    drawStoveAndHood();       // Bếp từ & máy hút mùi
+    glPopMatrix();
 
+    // -----------------------------------------------------------
+    // CỤM 2: DÀN TỦ TREO TƯỜNG (Đẩy lên cao hẳn để không bị dính vào bàn bếp)
+    // -----------------------------------------------------------
+    glPushMatrix();
+    // Do bàn bếp dưới đã nâng lên Y = 0.85f, dàn tủ treo phải được đẩy lên cao hơn nữa.
+    // Tịnh tiến Y = 1.3f để tạo khoảng trống thông thoáng ở giữa cho vòi nước và máy hút mùi.
+    glTranslatef(4.2f, 1.3f, -2.5f);
+    drawHangingCabinets();
+    glPopMatrix();
+
+    // -----------------------------------------------------------
+    // CỤM 3: TỦ LẠNH (Giữ nguyên vị trí sàn, căn chỉnh lại tỷ lệ nhẹ)
+    // -----------------------------------------------------------
+    glPushMatrix();
+    // Tủ lạnh đứng độc lập từ sàn nhà (Y = 0.0f).
+    // Giữ nguyên X = 5.2f để nó ép sát vào góc phải, làm điểm tựa không gian mà không che bếp.
+    glTranslatef(5.2f, 0.0f, -2.5f);
+    drawFridge();
     glPopMatrix();
 }

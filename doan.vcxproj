@@ -25,6 +25,7 @@
     <ClCompile Include="InteriorCamera.cpp" />
     <ClCompile Include="Kitchen.cpp" />
     <ClCompile Include="LivingRoom.cpp" />
+    <ClCompile Include="Stairs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FirstFloorWC.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="InteriorCamera.h" />
     <ClInclude Include="Kitchen.h" />
     <ClInclude Include="LivingRoom.h" />
+    <ClInclude Include="Stairs.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
